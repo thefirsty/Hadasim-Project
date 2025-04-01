@@ -64,3 +64,24 @@ def count_all_chunks(folder="chunks"):
 
 
 
+#פונקציה להצגת N קודי השגיאות השכיחות ביותר
+def display_top_errors(counter, N):
+    top_errors = counter.most_common(N)
+    print(f"\n {N} קודי השגיאה השכיחים ביותר:")
+    for code, count in top_errors:
+        print(f"{code}: {count}")
+
+
+#הפעלה
+if __name__ == "__main__":
+    try:
+        N = int(input("כמה קודי שגיאה הכי שכיחים להציג (N)? "))
+    except ValueError:
+        print("אנא הזן מספר תקין.")
+        exit()
+
+    total_counter = count_all_chunks()
+    display_top_errors(total_counter, N)
+
+
+
