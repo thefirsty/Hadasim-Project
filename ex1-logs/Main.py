@@ -48,3 +48,19 @@ def count_errors_in_chunk(chunk_path):
 
     return counter
 
+#חיבור הספירות מכל הקבצים-
+#הפעלת פונקצית הספירה על כל הchunks - כל הקבצים בתיקיה chunks
+
+def count_all_chunks(folder="chunks"):
+    total_counter = Counter()
+
+    for filename in os.listdir(folder):
+        if filename.startswith("chunk_") and filename.endswith(".txt"):
+            path = os.path.join(folder, filename)
+            chunk_counter = count_errors_in_chunk(path)
+            total_counter.update(chunk_counter)
+
+    return total_counter
+
+
+
