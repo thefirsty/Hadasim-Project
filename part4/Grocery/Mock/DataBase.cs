@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Repository.Entities;
 using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,11 @@ namespace Mock
 {
     public class DataBase : DbContext, IContext
     {
-        public DbSet<Achievement> achivevements { get; set; }
-        public DbSet<Challenge> challenges { get; set; }
-        public DbSet<ChallengeParticipant> challengeParticipants { get; set; }
-        public DbSet<ChatMessage> chatMessages { get; set; }
-        public DbSet<Comment> comments { get; set; }
-        public DbSet<Follower> followers { get; set; }
+        public DbSet<User> users { get; set; }
+        public DbSet<Product> products { get; set; }
+        public DbSet<Supplier> suppliers { get; set; }
+        public DbSet<Order> orders { get; set; }
+        public DbSet<OrderItem> orderItems { get; set; }
 
         public void Save()
         {
@@ -25,7 +25,7 @@ namespace Mock
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("server=localhost;database=sport_network;trusted_connection=true");
+            optionsBuilder.UseSqlServer("server=localhost;database=grocery;trusted_connection=true");
         }
 
 

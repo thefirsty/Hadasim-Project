@@ -24,28 +24,29 @@ namespace Service.Service
 
         public SupplierDto Add(SupplierDto item)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Supplier>(item);
+            return _mapper.Map<SupplierDto>(_repository.Add(entity));
         }
 
         public void Delete(int supplierId)
         {
-            throw new NotImplementedException();
+            _repository.Delete(supplierId);
         }
 
         public SupplierDto GetById(int supplierId)
         {
-            throw new NotImplementedException();
+            return _mapper.Map<SupplierDto>(_repository.GetById(supplierId));
         }
 
         public List<SupplierDto> GetAll()
         {
-            throw new NotImplementedException();
+            return _mapper.Map<List<SupplierDto>>(_repository.GetAll());
         }
 
         public SupplierDto Update(SupplierDto item, int supplierId)
         {
-            var entity = _mapper.Map<User>(item);
-            return _mapper.Map<UserDto>(_repository.Update(entity, supplierId));
+            var entity = _mapper.Map<Supplier>(item);
+            return _mapper.Map<SupplierDto>(_repository.Update(entity, supplierId));
         }
     }
 }

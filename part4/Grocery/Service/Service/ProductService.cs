@@ -24,27 +24,29 @@ namespace Service.Service
 
         public ProductDto Add(ProductDto item)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Product>(item);
+            return _mapper.Map<ProductDto>(_repository.Add(entity));
         }
 
-        public void Delete(int id)
+        public void Delete(int productId)
         {
-            throw new NotImplementedException();
+            _repository.Delete(productId);
         }
 
-        public ProductDto Get(int id)
+        public ProductDto GetById(int productId)
         {
-            throw new NotImplementedException();
+            return _mapper.Map<ProductDto>(_repository.GetById(productId));
         }
 
         public List<ProductDto> GetAll()
         {
-            throw new NotImplementedException();
+            return _mapper.Map<List<ProductDto>>(_repository.GetAll());
         }
 
-        public ProductDto Update(ProductDto item, int id)
+        public ProductDto Update(ProductDto item, int productId)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<Product>(item);
+            return _mapper.Map<ProductDto>(_repository.Update(entity, productId));
         }
     }
 }
