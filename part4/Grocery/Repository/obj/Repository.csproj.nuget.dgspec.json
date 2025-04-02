@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\r0586\\OneDrive\\שולחן העבודה\\Grocery\\Repository\\Repository.csproj": {}
+    "C:\\Users\\r0586\\OneDrive\\שולחן העבודה\\Hadasim\\Hadasim-Project\\part4\\Grocery\\Repository\\Repository.csproj": {}
   },
   "projects": {
-    "C:\\Users\\r0586\\OneDrive\\שולחן העבודה\\Grocery\\Repository\\Repository.csproj": {
+    "C:\\Users\\r0586\\OneDrive\\שולחן העבודה\\Hadasim\\Hadasim-Project\\part4\\Grocery\\Repository\\Repository.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\r0586\\OneDrive\\שולחן העבודה\\Grocery\\Repository\\Repository.csproj",
+        "projectUniqueName": "C:\\Users\\r0586\\OneDrive\\שולחן העבודה\\Hadasim\\Hadasim-Project\\part4\\Grocery\\Repository\\Repository.csproj",
         "projectName": "Repository",
-        "projectPath": "C:\\Users\\r0586\\OneDrive\\שולחן העבודה\\Grocery\\Repository\\Repository.csproj",
+        "projectPath": "C:\\Users\\r0586\\OneDrive\\שולחן העבודה\\Hadasim\\Hadasim-Project\\part4\\Grocery\\Repository\\Repository.csproj",
         "packagesPath": "C:\\Users\\r0586\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\r0586\\OneDrive\\שולחן העבודה\\Grocery\\Repository\\obj\\",
+        "outputPath": "C:\\Users\\r0586\\OneDrive\\שולחן העבודה\\Hadasim\\Hadasim-Project\\part4\\Grocery\\Repository\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
