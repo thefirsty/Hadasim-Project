@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Common.Dto
 {
-    internal class SupplierDto
+    public class SupplierDto
     {
+        public int SupplierId { get; set; }
+        public string ContactName { get; set; }
+        public string CompanyName { get; set; }
+        public string Phone { get; set; }
+        public int UserId { get; set; }
     }
 }

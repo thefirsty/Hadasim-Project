@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Common.Dto;
+using Microsoft.Extensions.DependencyInjection;
 using Repository.Repository;
 using Service.Interfaces;
 using System;
@@ -18,13 +19,13 @@ namespace Service.Service
 
             services.AddScoped<IService<UserDto>, UserService>();
 
-            services.AddScoped<IService<PostDto>, PostService>();
+            services.AddScoped<IService<SupplierDto>, SupplierService>();
 
-            services.AddScoped<IService<FollowerDto>, FollowerService>();
+            services.AddScoped<IService<ProductDto>, ProductService>();
 
-            services.AddScoped<IService<CommentDto>, CommentService>();
+            services.AddScoped<IService<OrderDto>, OrderService>();
 
-            services.AddScoped<IService<ChatMessageDto>, ChatMessageService>();
+            services.AddScoped<IService<OrderItemDto>, OrderItemService>();
 
             services.AddAutoMapper(typeof(MyMapper));
 

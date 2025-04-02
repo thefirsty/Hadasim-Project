@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace Common.Dto
 {
-    internal class UserDto
+    public class UserDto
     {
+        public int UserId { get; set; }
+        public string Role { get; set; }
+        public string Password { get; set; }
+        public string Email { get; set; }
     }
 }
