@@ -77,7 +77,7 @@ avg_for_hour = df.groupby('hour')['value'].mean().reset_index()
 avg_for_hour.columns = ['start time', 'avg']
 
 # Print the results
-print(avg_for_hour)
+#print(avg_for_hour)
 
 # 2. Calculating hourly averages by splitting the data into groups
 
