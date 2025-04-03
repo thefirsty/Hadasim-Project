@@ -1,61 +1,122 @@
 import pandas as pd
 from datetime import datetime
+import os
 
-
-# Converted the Excel file to a csv file - more efficient in terms of runtime
-#df = pd.read_excel("time_series.xlsx")
-#df.to_csv("time_series.csv", index=False, sep=",")
+# Converted the Excel file to a CSV file – more efficient in terms of runtime
+# df = pd.read_excel("time_series.xlsx")
+# df.to_csv("time_series.csv", index=False, sep=",")
 
 df = pd.read_csv("time_series.csv")
 
-#1. בדיקות על הנתונים
+# 1. Data validation
 
-print("\n בדיקה כמה ערכים חסרים יש :")
+print("\nChecking how many missing values there are:")
 print(df.isnull().sum())
 
-#פונקציה שבודקת האם הפורמט של חותמת הזמן תקין
+# Function to check whether the timestamp format is valid
 def is_valid_timestamp(ts):
     try:
-        #מנסה להמיר אותו לתאריך הפורמט תקין
+        # Try converting the timestamp to datetime format
         datetime.strptime(ts, "%Y-%m-%d %H:%M:%S")
-        #אם הצליחה מחזירה TRUE
+        # If successful, return True
         return True
-    # אחרת - חותמת הזמן לא בפורמט תקין - תחזיר FALSE
+    # Otherwise – the timestamp is not in a valid format, return False
     except:
         return False
 
-#הוספת עמודה שתסמן בכל שורה האם חותמת הזמן בפורמט תקין או לא
+# Add a column that indicates whether each timestamp is valid
 df['timestamp_valid'] = df['timestamp'].apply(is_valid_timestamp)
 
-#סינון כל השורות עם חותמת זמן לא תקינה
+# Filter all rows with invalid timestamps
 invalid_timestamps = df[~df['timestamp_valid']]
-print(f"\nמספר חותמות הזמן לא תקינות: {len(invalid_timestamps)}")
+print(f"\nNumber of invalid timestamps: {len(invalid_timestamps)}")
 
-
-#בדיקה האם ערכי הVALUE תקינים - האם כולם מספריים
-#הוספת עמודה שתסמן עבור כל שורה האם הערך תקין או לא
+# Check whether the 'value' column is valid – i.e., contains numeric values
+# Add a column indicating whether the value in each row is valid
 df['value_valid'] = pd.to_numeric(df['value'], errors='coerce').notnull()
 
-#סינון כל השורות עם ערך לא תקין
+# Filter all rows with invalid values
 invalid_values = df[~df['value_valid']]
-print(f"\nמספר הערכים הלא תקינים: {len(invalid_values)}")
+print(f"\nNumber of invalid values: {len(invalid_values)}")
 
-
-#עיבוד הנתונים לנתונים תקינים בלבד לאחר הבדיקות
+# Filter to keep only valid rows after all checks
 clean_df = df[df['timestamp_valid'] & df['value_valid']].copy()
 
-#שמירה לקובץ חדש שיכיל רק נתונים תקינים
-#clean_df[['timestamp', 'value']].to_csv("clean_time_series.csv", index=False)
+# Save to a new CSV file that contains only valid data
+# clean_df[['timestamp', 'value']].to_csv("clean_time_series.csv", index=False)
 
-#2. חישוב הממוצע עבור כל שעה
+# 2. Calculate average value for each hour
 df = pd.read_csv("clean_time_series.csv")
-# המרה של עמודת הזמן לפורמט datetime
+
+# Convert the timestamp column to datetime format
 df['timestamp'] = pd.to_datetime(df['timestamp'])
-# עיגול הזמן לשעה (כל שורה מקבלת את שעת ההתחלה שלה)
+
+# Round down each timestamp to the nearest hour
 df['hour'] = df['timestamp'].dt.floor('h')
-# חישוב ממוצע ערכים לכל שעה
+
+# Calculate the average value per hour
 avg_for_hour = df.groupby('hour')['value'].mean().reset_index()
-# שינוי שם לעמודות
+
+# Rename columns for display
 avg_for_hour.columns = ['start time', 'avg']
-#הדפסת התוצאות
+
+# Print the results
 print(avg_for_hour)
+
+#2.חישוב הממוצע לכל שעה בדרך של חלוקת הדאטה לקבוצות
+
+
+df = pd.read_csv("clean_time_series.csv")
+df['timestamp'] = pd.to_datetime(df['timestamp'])
+
+# חלוקה לפי יום
+df['date'] = df['timestamp'].dt.date
+unique_dates = df['date'].unique()
+
+df['date'] = df['timestamp'].dt.date
+
+# Create a directory to hold the split files
+output_dir = "split_files"
+os.makedirs(output_dir, exist_ok=True)
+
+# Split the file into separate files per date
+for date in df['date'].unique():
+    df_day = df[df['date'] == date].copy()
+    filename = f"{output_dir}/split_by_date_{date}.csv"
+    df_day.to_csv(filename, index=False)
+
+import pandas as pd
+import glob
+
+# רשימת כל הקבצים בתיקיית split_files
+files = glob.glob("split_files/split_by_date_*.csv")
+
+# רשימה שתכיל את כל טבלאות הממוצע
+avg_list = []
+
+for file in files:
+
+    df = pd.read_csv(file)
+    df['timestamp'] = pd.to_datetime(df['timestamp'])
+
+    # עיגול כל timestamp לשעה
+    df['hour'] = df['timestamp'].dt.floor('h')
+
+    # חישוב ממוצע לכל שעה
+    avg_for_hour = df.groupby('hour')['value'].mean().reset_index()
+    avg_for_hour.columns = ['start time', 'avg']
+
+    # מוסיפים את התוצאה לרשימה
+    avg_list.append(avg_for_hour)
+
+# שילוב כל התוצאות לקובץ אחד
+final_df = pd.concat(avg_list, ignore_index=True)
+
+# המרה ודירוג לפי זמן
+final_df['start time'] = pd.to_datetime(final_df['start time'])
+final_df = final_df.sort_values(by='start time')
+
+# שמירה סופית לקובץ אחד
+final_df.to_csv("avg_for_hour_full.csv", index=False)
+print(final_df)
+
