@@ -1,6 +1,8 @@
 import pandas as pd
 from datetime import datetime
 import os
+import glob
+
 
 # Converted the Excel file to a CSV file – more efficient in terms of runtime
 # df = pd.read_excel("time_series.xlsx")
@@ -63,17 +65,14 @@ avg_for_hour.columns = ['start time', 'avg']
 # Print the results
 print(avg_for_hour)
 
-#2.חישוב הממוצע לכל שעה בדרך של חלוקת הדאטה לקבוצות
-
+# 2. Calculating hourly averages by splitting the data into groups
 
 df = pd.read_csv("clean_time_series.csv")
 df['timestamp'] = pd.to_datetime(df['timestamp'])
 
-# חלוקה לפי יום
+# Split by date (extract just the date part)
 df['date'] = df['timestamp'].dt.date
 unique_dates = df['date'].unique()
-
-df['date'] = df['timestamp'].dt.date
 
 # Create a directory to hold the split files
 output_dir = "split_files"
@@ -85,38 +84,39 @@ for date in df['date'].unique():
     filename = f"{output_dir}/split_by_date_{date}.csv"
     df_day.to_csv(filename, index=False)
 
-import pandas as pd
-import glob
 
-# רשימת כל הקבצים בתיקיית split_files
+# List of all split CSV files in the split_files directory
 files = glob.glob("split_files/split_by_date_*.csv")
 
-# רשימה שתכיל את כל טבלאות הממוצע
+# List to hold all the hourly average DataFrames
 avg_list = []
 
 for file in files:
-
     df = pd.read_csv(file)
     df['timestamp'] = pd.to_datetime(df['timestamp'])
 
-    # עיגול כל timestamp לשעה
+    # Round each timestamp down to the hour
     df['hour'] = df['timestamp'].dt.floor('h')
 
-    # חישוב ממוצע לכל שעה
+    # Calculate hourly average
     avg_for_hour = df.groupby('hour')['value'].mean().reset_index()
     avg_for_hour.columns = ['start time', 'avg']
 
-    # מוסיפים את התוצאה לרשימה
+    # Append the result to the list
     avg_list.append(avg_for_hour)
 
-# שילוב כל התוצאות לקובץ אחד
+# Combine all hourly averages into a single DataFrame
 final_df = pd.concat(avg_list, ignore_index=True)
 
-# המרה ודירוג לפי זמן
+# Convert and sort by time
 final_df['start time'] = pd.to_datetime(final_df['start time'])
 final_df = final_df.sort_values(by='start time')
 
-# שמירה סופית לקובץ אחד
+# Save final combined result to a CSV file
 final_df.to_csv("avg_for_hour_full.csv", index=False)
 print(final_df)
 
+# 3. How do we update the hourly average in real-time when data comes in a stream and not from a file?
+# Answer: For each hour, we store the sum of values and the count of values.
+# That way, we can simply add each new incoming value to the relevant hour’s sum and count,
+# and divide to get the new average — without needing to go over all previous data every time.
