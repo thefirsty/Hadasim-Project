@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Common.Dto;
+using Microsoft.AspNetCore.Mvc;
+using Service.Interfaces;
+using Service.Service;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +11,80 @@ namespace Grocery.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly IService<UserDto> _userService;
+
+        public UserController(IService<UserDto> userService)
+        {
+            _userService = userService;
+
+        }
         // GET: api/<UserController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                var users = _userService.GetAll();
+                if (users == null || !users.Any())
+                {
+                    return NotFound("No users found.");
+                }
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         // GET api/<UserController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult GetById(int id)
         {
-            return "value";
+            try
+            {
+
+                if (id <= 0)
+                {
+                    return BadRequest("Invalid user ID.");
+                }
+
+                var user = _userService.GetById(id);
+                if (user == null)
+                {
+                    return NotFound($"user with ID {id} not found.");
+                }
+
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         // POST api/<UserController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromForm] UserDto value)
         {
+            try
+            {
+                if (value == null)
+                {
+                    return BadRequest("Invalid user data.");
+                }
+
+                _userService.Add(value);
+                return Ok("user added successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        // PUT api/<UserController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
 
-        // DELETE api/<UserController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+
+
     }
 }

@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Common.Dto;
+using Microsoft.AspNetCore.Mvc;
+using Service.Interfaces;
+using Service.Service;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +11,77 @@ namespace Grocery.Controllers
     [ApiController]
     public class OrderItemController : ControllerBase
     {
+        private readonly IService<OrderItemDto> _orderItemService;
+
+        public OrderItemController(IService<OrderItemDto> orderItemService)
+        {
+            _orderItemService = orderItemService;
+
+        }
         // GET: api/<OrderItemController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                var orderItems = _orderItemService.GetAll();
+                if (orderItems == null || !orderItems.Any())
+                {
+                    return NotFound("No order items found.");
+                }
+                return Ok(orderItems);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         // GET api/<OrderItemController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult GetById(int id)
         {
-            return "value";
+            try
+            {
+
+                if (id <= 0)
+                {
+                    return BadRequest("Invalid order item ID.");
+                }
+
+                var orderItem = _orderItemService.GetById(id);
+                if (orderItem == null)
+                {
+                    return NotFound($"order item with ID {id} not found.");
+                }
+
+                return Ok(orderItem);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         // POST api/<OrderItemController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromForm] OrderItemDto value)
         {
+            try
+            {
+                if (value == null)
+                {
+                    return BadRequest("Invalid order item data.");
+                }
+
+                _orderItemService.Add(value);
+                return Ok("order item added successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        // PUT api/<OrderItemController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<OrderItemController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

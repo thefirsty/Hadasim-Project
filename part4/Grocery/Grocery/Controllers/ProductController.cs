@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Common.Dto;
+using Microsoft.AspNetCore.Mvc;
+using Service.Interfaces;
+using Service.Service;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +11,77 @@ namespace Grocery.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
+        private readonly IService<ProductDto> _productService;
+
+        public ProductController(IService<ProductDto> productService)
+        {
+            _productService = productService;
+
+        }
         // GET: api/<ProductController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                var products = _productService.GetAll();
+                if (products == null || !products.Any())
+                {
+                    return NotFound("No products found.");
+                }
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         // GET api/<ProductController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult GetById(int id)
         {
-            return "value";
+            try
+            {
+
+                if (id <= 0)
+                {
+                    return BadRequest("Invalid product ID.");
+                }
+
+                var product = _productService.GetById(id);
+                if (product == null)
+                {
+                    return NotFound($"product with ID {id} not found.");
+                }
+
+                return Ok(product);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         // POST api/<ProductController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromForm] ProductDto value)
         {
+            try
+            {
+                if (value == null)
+                {
+                    return BadRequest("Invalid product data.");
+                }
+
+                _productService.Add(value);
+                return Ok("product added successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        // PUT api/<ProductController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<ProductController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

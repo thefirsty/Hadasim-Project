@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Common.Dto;
+using Microsoft.AspNetCore.Mvc;
+using Service.Interfaces;
+using Service.Service;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +11,78 @@ namespace Grocery.Controllers
     [ApiController]
     public class SupplierController : ControllerBase
     {
+        private readonly IService<SupplierDto> _supplierService;
+
+        public SupplierController(IService<SupplierDto> supplierService)
+        {
+            _supplierService = supplierService;
+
+        }
         // GET: api/<SupplierController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                var suppliers = _supplierService.GetAll();
+                if (suppliers == null || !suppliers.Any())
+                {
+                    return NotFound("No suppliers found.");
+                }
+                return Ok(suppliers);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         // GET api/<SupplierController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult GetById(int id)
         {
-            return "value";
+            try
+            {
+
+                if (id <= 0)
+                {
+                    return BadRequest("Invalid supplier ID.");
+                }
+
+                var supplier = _supplierService.GetById(id);
+                if (supplier == null)
+                {
+                    return NotFound($"supplier with ID {id} not found.");
+                }
+
+                return Ok(supplier);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         // POST api/<SupplierController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromForm] SupplierDto value)
         {
+            try
+            {
+                if (value == null)
+                {
+                    return BadRequest("Invalid supplier data.");
+                }
+
+                _supplierService.Add(value);
+                return Ok("supplier added successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        // PUT api/<SupplierController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
 
-        // DELETE api/<SupplierController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
