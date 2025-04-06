@@ -1,4 +1,5 @@
 ﻿using Common.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 using System.Security.Claims;
@@ -20,6 +21,8 @@ namespace Grocery.Controllers
         }
         // GET: api/<OrderController>
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public IActionResult Get()
         {
             try
@@ -66,6 +69,8 @@ namespace Grocery.Controllers
 
         // POST api/<OrderController>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
+
         public IActionResult Post([FromForm] OrderDto value)
         {
             try

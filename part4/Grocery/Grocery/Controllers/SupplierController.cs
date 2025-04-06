@@ -1,4 +1,5 @@
 ﻿using Common.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 using Service.Service;
@@ -20,6 +21,8 @@ namespace Grocery.Controllers
         }
         // GET: api/<SupplierController>
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+
         public IActionResult Get()
         {
             try
@@ -39,10 +42,13 @@ namespace Grocery.Controllers
 
         // GET api/<SupplierController>/5
         [HttpGet("{id}")]
+        [Authorize]
+
         public IActionResult GetById(int id)
         {
             try
             {
+
 
                 if (id <= 0)
                 {

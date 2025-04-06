@@ -1,7 +1,9 @@
 ﻿using Common.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 using Service.Service;
+using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,6 +22,7 @@ namespace Grocery.Controllers
         }
         // GET: api/<OrderItemController>
         [HttpGet]
+
         public IActionResult Get()
         {
             try
@@ -65,10 +68,13 @@ namespace Grocery.Controllers
 
         // POST api/<OrderItemController>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
+
         public IActionResult Post([FromForm] OrderItemDto value)
         {
             try
             {
+
                 if (value == null)
                 {
                     return BadRequest("Invalid order item data.");

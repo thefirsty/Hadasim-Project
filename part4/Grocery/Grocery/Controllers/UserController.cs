@@ -1,7 +1,9 @@
 ﻿using Common.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 using Service.Service;
+using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,6 +22,7 @@ namespace Grocery.Controllers
         }
         // GET: api/<UserController>
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult Get()
         {
             try
@@ -39,10 +42,17 @@ namespace Grocery.Controllers
 
         // GET api/<UserController>/5
         [HttpGet("{id}")]
+        [Authorize]
+
         public IActionResult GetById(int id)
         {
             try
             {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (userId == null)
+                {
+                    return Unauthorized("User is not authenticated.");
+                }
 
                 if (id <= 0)
                 {
