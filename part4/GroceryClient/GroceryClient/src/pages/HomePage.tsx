@@ -90,6 +90,17 @@ const HomePage: React.FC = () => {
                     </div>
                 )}
                 
+                {isAuthenticated && (
+                    <div className="user-actions">
+                        <button 
+                            className="action-button orders"
+                            onClick={() => navigate('/orders')}
+                        >
+                            ההזמנות שלי
+                        </button>
+                    </div>
+                )}
+                
                 <div className="features">
                     <div className="feature-card">
                         <h3>הזמנה מהירה</h3>

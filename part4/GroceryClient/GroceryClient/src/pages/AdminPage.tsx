@@ -31,8 +31,8 @@ const AdminPage: React.FC = () => {
                         <button className="action-button" onClick={() => navigate('/admin/products')}>
                             ניהול מוצרים
                         </button>
-                        <button className="action-button" onClick={() => navigate('/admin/orders')}>
-                            ניהול הזמנות
+                        <button className="action-button" onClick={() => navigate('/orders')}>
+                            צפייה בהזמנות
                         </button>
                         <button className="action-button" onClick={() => navigate('/admin/suppliers')}>
                             ניהול ספקים

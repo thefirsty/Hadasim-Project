@@ -5,8 +5,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import HomePage from './pages/HomePage';
-import './App.css';
 import AdminPage from './pages/AdminPage';
+import OrdersPage from './pages/OrdersPage';
+import SupplierPage from './pages/SupplierPage';
+import './App.css';
+
 
 const App: React.FC = () => {
     return (
@@ -17,6 +20,8 @@ const App: React.FC = () => {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/admin" element={<AdminPage />} />
+                    <Route path="/supplier" element={<SupplierPage />} />
+                    <Route path="/orders" element={<OrdersPage />} />
                     {/* Add other routes here */}
                 </Routes>
             </Router>
