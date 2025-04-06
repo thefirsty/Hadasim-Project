@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import OrderItemList from '../components/OrderItemList';
 import './OrdersPage.css';
 
 interface Order {
@@ -84,28 +85,29 @@ const OrdersPage: React.FC = () => {
                         <div key={order.id} className="order-card">
                             <div className="order-header">
                                 <h3>הזמנה #{order.id}</h3>
-                                <span className="order-date">תאריך: {formatDate(order.orderDate)}</span>
+                                <span className="order-date">{formatDate(order.orderDate)}</span>
                             </div>
                             <div className="order-status">
-                                סטטוס: <span className={`status-${order.status.toLowerCase()}`}>{order.status}</span>
+                                סטטוס: {order.status}
                             </div>
                             <div className="order-items">
-                                <h4>פריטים:</h4>
+                                <h4>פריטים בהזמנה:</h4>
                                 <ul>
                                     {order.items.map((item) => (
                                         <li key={item.id}>
-                                            {item.productName} - {item.quantity} יחידות - {item.price} ₪
+                                            {item.productName} - {item.quantity} יחידות - ₪{item.price}
                                         </li>
                                     ))}
                                 </ul>
                             </div>
                             <div className="order-total">
-                                סה"כ: {order.totalAmount} ₪
+                                סה"כ: ₪{order.totalAmount}
                             </div>
                         </div>
                     ))}
                 </div>
             )}
+            <OrderItemList />
         </div>
     );
 };
