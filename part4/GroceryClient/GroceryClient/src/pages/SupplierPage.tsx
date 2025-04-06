@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './SupplierPage.css';
+import SupplierOrders from '../components/SupplierOrders';
 
 const SupplierPage: React.FC = () => {
     const navigate = useNavigate();
@@ -43,6 +44,10 @@ const SupplierPage: React.FC = () => {
                             דוחות
                         </button>
                     </div>
+                </div>
+
+                <div className="orders-section">
+                    <SupplierOrders />
                 </div>
             </main>
         </div>
