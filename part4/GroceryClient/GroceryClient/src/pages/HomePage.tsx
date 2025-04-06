@@ -1,6 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 import './HomePage.css';
+
+interface TokenPayload {
+    role?: string;
+    nameid?: string;
+    email?: string;
+    exp?: number;
+    iss?: string;
+    aud?: string;
+}
+
+const extractRoleFromToken = (token: string): string => {
+    try {
+        console.log('Starting token extraction...');
+        const decoded = jwtDecode<TokenPayload>(token);
+        console.log('Decoded token:', decoded);
+        
+        const role = decoded.role;
+        console.log('Extracted role:', role);
+        return role || '';
+    } catch (error) {
+        console.error('Error extracting role from token:', error);
+        return '';
+    }
+};
 
 const HomePage: React.FC = () => {
     const navigate = useNavigate();
@@ -9,19 +34,38 @@ const HomePage: React.FC = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        const role = localStorage.getItem('role');
+        let role = localStorage.getItem('role');
         
-        if (token && role) {
-            setIsAuthenticated(true);
-            setUserRole(role);
+        console.log('Token from localStorage:', token);
+        console.log('Role from localStorage:', role);
+        
+        if (token) {
+            if (!role) {
+                role = extractRoleFromToken(token);
+                console.log('Extracted role from token:', role);
+                if (role) {
+                    localStorage.setItem('role', role);
+                    console.log('Saved role to localStorage:', role);
+                }
+            }
+            
+            if (role) {
+                setIsAuthenticated(true);
+                setUserRole(role);
+            }
         }
     }, []);
 
     useEffect(() => {
+        console.log('Current state:', { isAuthenticated, userRole });
+        // Only redirect if we have both authentication and role
         if (isAuthenticated && userRole) {
-            if (userRole === 'ADMIN') {
+            console.log('Attempting to redirect...');
+            if (userRole.toUpperCase() === 'ADMIN') {
+                console.log('Redirecting to admin page');
                 navigate('/admin');
-            } else if (userRole === 'SUPPLIER') {
+            } else if (userRole.toUpperCase() === 'SUPPLIER') {
+                console.log('Redirecting to supplier page');
                 navigate('/supplier');
             }
         }

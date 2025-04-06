@@ -27,11 +27,23 @@ const Login: React.FC = () => {
 
         try {
             const response = await authService.login(formData);
+            console.log('Login response:', response);
             localStorage.setItem('token', response.token);
             localStorage.setItem('role', response.role);
             
-            // Redirect to supplier page since only suppliers can login
-            navigate('/supplier');
+            console.log('Stored in localStorage:', {
+                token: localStorage.getItem('token'),
+                role: localStorage.getItem('role')
+            });
+            
+            // Redirect based on user role
+            if (response.role === 'ADMIN') {
+                console.log('Redirecting to admin page');
+                navigate('/admin');
+            } else if (response.role === 'SUPPLIER') {
+                console.log('Redirecting to supplier page');
+                navigate('/supplier');
+            }
         } catch (err) {
             if (err && typeof err === 'object' && 'response' in err) {
                 const axiosError = err as { response?: { data?: { message?: string } } };

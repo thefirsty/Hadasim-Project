@@ -20,6 +20,22 @@ export interface AuthResponse {
     userId: number;
 }
 
+const extractRoleFromToken = (token: string): string => {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        const payload = JSON.parse(jsonPayload);
+        return payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+    } catch (error) {
+        console.error('Error extracting role from token:', error);
+        return '';
+    }
+};
+
 export const authService = {
     async login(loginDto: LoginDto): Promise<AuthResponse> {
         try {
@@ -31,7 +47,15 @@ export const authService = {
                 }
             });
             console.log('Login response:', response.data);
-            return response.data;
+            
+            const token = response.data.token;
+            const role = extractRoleFromToken(token);
+            console.log('Extracted role from token:', role);
+            
+            return {
+                ...response.data,
+                role: role
+            };
         } catch (error) {
             console.error('Login error:', error);
             if (axios.isAxiosError(error)) {
@@ -66,7 +90,6 @@ export const authService = {
                 }
             });
 
-            
             console.log('Server response:', response.data);
 
             // אם ההרשמה הצליחה, ננסה להתחבר עד שנקבל את ה-ID
@@ -103,9 +126,10 @@ export const authService = {
                         }
                     }
                 }
+                throw new Error('לא הצלחנו להתחבר לאחר ההרשמה. אנא נסה להתחבר באופן ידני.');
+            } else {
+                throw new Error('הרשמה נכשלה - תגובה לא צפויה מהשרת');
             }
-
-            throw new Error('הרשמה נכשלה - תגובה לא צפויה מהשרת');
         } catch (error) {
             console.error('Registration error details:', error);
             if (axios.isAxiosError(error)) {
