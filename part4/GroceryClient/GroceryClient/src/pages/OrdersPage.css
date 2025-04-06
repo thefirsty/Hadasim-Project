@@ -11,6 +11,116 @@
     margin-bottom: 2rem;
 }
 
+.add-order-button {
+    display: block;
+    margin: 0 auto 2rem;
+    padding: 0.8rem 1.5rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.add-order-button:hover {
+    background-color: #45a049;
+}
+
+.new-order-form {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.new-order-form h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+.order-items-form {
+    margin-bottom: 2rem;
+}
+
+.order-items-form h3 {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.form-group {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-group input {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    flex: 1;
+}
+
+.form-group button {
+    padding: 0.5rem 1rem;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-group button:hover {
+    background-color: #1976D2;
+}
+
+.order-items-list {
+    margin-bottom: 1.5rem;
+}
+
+.order-items-list h3 {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.order-item-card {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+.order-total {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.create-order-button {
+    display: block;
+    margin: 0 auto;
+    padding: 0.8rem 1.5rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.create-order-button:hover {
+    background-color: #45a049;
+}
+
+.create-order-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
 .error-message {
     text-align: center;
     padding: 2rem;
@@ -97,10 +207,4 @@
 
 .order-items li:last-child {
     border-bottom: none;
-}
-
-.order-total {
-    font-weight: bold;
-    color: #333;
-    text-align: left;
 } 

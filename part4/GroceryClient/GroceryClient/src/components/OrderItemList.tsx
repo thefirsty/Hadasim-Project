@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchOrderItems } from '../store/orderItemSlice';
 import { RootState } from '../store/store';
+import { AppDispatch } from '../store/store';
 import './OrderItemList.css';
 
 const OrderItemList: React.FC = () => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const { orderItems, loading, error } = useSelector((state: RootState) => state.orderItems);
 
     useEffect(() => {
@@ -42,6 +43,7 @@ const OrderItemList: React.FC = () => {
                                 <p><strong>שם המוצר:</strong> {item.productName}</p>
                                 <p><strong>כמות:</strong> {item.quantity}</p>
                                 <p><strong>מחיר:</strong> ₪{item.price}</p>
+                                <p><strong>מספר הזמנה:</strong> {item.orderId}</p>
                             </div>
                         </div>
                     ))}
