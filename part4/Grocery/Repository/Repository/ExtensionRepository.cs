@@ -15,6 +15,8 @@ namespace Repository.Repository
         {
             services.AddScoped<IRepository<User>, UserRepository>();
 
+            services.AddScoped<IUserRepository, ExtensionUserRepository>();
+
             services.AddScoped<IRepository<Order>, OrderRepository>();
 
             services.AddScoped<IRepository<Product>, ProductRepository>();

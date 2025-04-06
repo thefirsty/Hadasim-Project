@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Repository.Repository;
 using Service.Interfaces;
+using Service.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,8 @@ namespace Service.Service
 
             services.AddScoped<IService<UserDto>, UserService>();
 
+            services.AddScoped<IUserService, ExtensionUserService>();
+
             services.AddScoped<IService<SupplierDto>, SupplierService>();
 
             services.AddScoped<IService<ProductDto>, ProductService>();
@@ -26,6 +29,11 @@ namespace Service.Service
             services.AddScoped<IService<OrderDto>, OrderService>();
 
             services.AddScoped<IService<OrderItemDto>, OrderItemService>();
+
+            services.AddScoped<IService<OrderItemDto>, OrderItemService>();
+
+            services.AddScoped<ILoginService, LoginService>();
+
 
             services.AddAutoMapper(typeof(MyMapper));
 
