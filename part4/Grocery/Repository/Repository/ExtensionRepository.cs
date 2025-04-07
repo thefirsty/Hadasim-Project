@@ -25,6 +25,9 @@ namespace Repository.Repository
 
             services.AddScoped<IRepository<Supplier>, SupplierRepository>();
 
+            services.AddScoped<ISupplierRepository, ExtensionSupplierRepository>();
+
+
             return services;
         }
     }

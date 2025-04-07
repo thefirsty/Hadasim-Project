@@ -13,10 +13,13 @@ namespace Grocery.Controllers
     public class SupplierController : ControllerBase
     {
         private readonly IService<SupplierDto> _supplierService;
+        private readonly ISupplierService _extensionSupplierService;
 
-        public SupplierController(IService<SupplierDto> supplierService)
+
+        public SupplierController(IService<SupplierDto> supplierService, ISupplierService extensionSupplierService)
         {
             _supplierService = supplierService;
+            _extensionSupplierService = extensionSupplierService;
 
         }
         // GET: api/<SupplierController>
@@ -90,5 +93,33 @@ namespace Grocery.Controllers
         }
 
 
+        // GET api/Supplier/user/5
+        [HttpGet("user/{userId}")]
+        [Authorize]
+        public IActionResult GetByUserId(int userId)
+        {
+            try
+            {
+                if (userId <= 0)
+                {
+                    return BadRequest("Invalid user ID.");
+                }
+
+                var supplier = _extensionSupplierService.GetSupplierByUserId(userId);
+                if (supplier == null)
+                {
+                    return NotFound($"Supplier for user ID {userId} not found.");
+                }
+
+                return Ok(supplier);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
+
+
 }
+

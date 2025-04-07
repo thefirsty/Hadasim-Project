@@ -8,6 +8,7 @@ import HomePage from './pages/HomePage';
 import AdminPage from './pages/AdminPage';
 import OrdersPage from './pages/OrdersPage';
 import SupplierPage from './pages/SupplierPage';
+import SupplierProductsPage from './pages/SupplierProductsPage';
 import './App.css';
 
 
@@ -21,8 +22,8 @@ const App: React.FC = () => {
                     <Route path="/register" element={<Register />} />
                     <Route path="/admin" element={<AdminPage />} />
                     <Route path="/supplier" element={<SupplierPage />} />
+                    <Route path="/supplier/products" element={<SupplierProductsPage />} />
                     <Route path="/orders" element={<OrdersPage />} />
-                    {/* Add other routes here */}
                 </Routes>
             </Router>
         </Provider>

@@ -24,6 +24,8 @@ namespace Service.Service
 
             services.AddScoped<IService<SupplierDto>, SupplierService>();
 
+            services.AddScoped<ISupplierService, ExtensionSupplierService>();
+
             services.AddScoped<IService<ProductDto>, ProductService>();
 
             services.AddScoped<IService<OrderDto>, OrderService>();
