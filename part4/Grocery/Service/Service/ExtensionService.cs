@@ -30,6 +30,8 @@ namespace Service.Service
 
             services.AddScoped<IService<OrderItemDto>, OrderItemService>();
 
+            services.AddScoped<IOrderService, ExtentionOrderService>();
+
             services.AddScoped<IService<OrderItemDto>, OrderItemService>();
 
             services.AddScoped<ILoginService, LoginService>();

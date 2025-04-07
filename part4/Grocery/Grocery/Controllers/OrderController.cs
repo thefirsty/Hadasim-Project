@@ -13,11 +13,13 @@ namespace Grocery.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IService<OrderDto> _orderService;
+        private readonly IOrderService _extensionOrderService;
 
-        public OrderController(IService<OrderDto> orderService)
+
+        public OrderController(IService<OrderDto> orderService, IOrderService extensionOrderService)
         {
             _orderService = orderService;
-            
+            _extensionOrderService = extensionOrderService;
         }
         // GET: api/<OrderController>
         [HttpGet]
@@ -117,6 +119,17 @@ namespace Grocery.Controllers
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
+        }
+
+        // GET: api/orders/by-supplier/5
+        [HttpGet("by-supplier/{supplierId}")]
+        public ActionResult<List<OrderDto>> GetOrdersBySupplierId(int supplierId)
+        {
+            var orders = _extensionOrderService.GetOrdersBySupplierId(supplierId);
+            if (orders == null || orders.Count == 0)
+                return NotFound($"No orders found for supplier ID {supplierId}");
+
+            return Ok(orders);
         }
 
     }

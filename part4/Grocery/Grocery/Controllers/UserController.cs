@@ -48,11 +48,7 @@ namespace Grocery.Controllers
         {
             try
             {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (userId == null)
-                {
-                    return Unauthorized("User is not authenticated.");
-                }
+                
 
                 if (id <= 0)
                 {
