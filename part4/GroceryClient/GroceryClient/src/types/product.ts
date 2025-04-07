@@ -1,7 +1,7 @@
 export interface Product {
-    ProductId?: number;
-    ProductName: string;
-    UnitPrice: number;
-    MinOrderQuantity: number;
-    SupplierId: number;
+    productId?: number;
+    productName: string;
+    unitPrice: number;
+    minOrderQuantity: number;
+    supplierId: number;
 } 

@@ -10,11 +10,11 @@ interface TokenPayload {
 const ProductForm: React.FC = () => {
     const [supplierId, setSupplierId] = useState<number | null>(null);
     const [formData, setFormData] = useState<Partial<Product>>({
-        ProductId: 0,
-        ProductName: '',
-        UnitPrice: 0,
-        MinOrderQuantity: 1,
-        SupplierId: 0
+        productId: 0,
+        productName: '',
+        unitPrice: 0,
+        minOrderQuantity: 1,
+        supplierId: 0
     });
 
     useEffect(() => {
@@ -39,7 +39,7 @@ const ProductForm: React.FC = () => {
                 setSupplierId(response.data.supplierId);
                 setFormData(prev => ({
                     ...prev,
-                    SupplierId: response.data.supplierId
+                    supplierId: response.data.supplierId
                 }));
             } catch (error) {
                 console.error('Failed to fetch supplier ID:', error);
@@ -53,7 +53,7 @@ const ProductForm: React.FC = () => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
-            [name]: name === 'UnitPrice' || name === 'MinOrderQuantity' ? parseFloat(value) : value
+            [name]: name === 'unitPrice' || name === 'minOrderQuantity' ? parseFloat(value) : value
         }));
     };
 
@@ -81,11 +81,11 @@ const ProductForm: React.FC = () => {
             });
 
             setFormData({
-                ProductId: 0,
-                ProductName: '',
-                UnitPrice: 0,
-                MinOrderQuantity: 1,
-                SupplierId: supplierId
+                productId: 0,
+                productName: '',
+                unitPrice: 0,
+                minOrderQuantity: 1,
+                supplierId: supplierId
             });
         } catch (error) {
             console.error('Failed to add product:', error);
@@ -96,23 +96,23 @@ const ProductForm: React.FC = () => {
         <form onSubmit={handleSubmit} className="product-form">
             <h2>הוספת מוצר חדש</h2>
             <div className="form-group">
-                <label htmlFor="ProductName">שם המוצר:</label>
+                <label htmlFor="productName">שם המוצר:</label>
                 <input
                     type="text"
-                    id="ProductName"
-                    name="ProductName"
-                    value={formData.ProductName}
+                    id="productName"
+                    name="productName"
+                    value={formData.productName}
                     onChange={handleChange}
                     required
                 />
             </div>
             <div className="form-group">
-                <label htmlFor="UnitPrice">מחיר:</label>
+                <label htmlFor="unitPrice">מחיר:</label>
                 <input
                     type="number"
-                    id="UnitPrice"
-                    name="UnitPrice"
-                    value={formData.UnitPrice}
+                    id="unitPrice"
+                    name="unitPrice"
+                    value={formData.unitPrice}
                     onChange={handleChange}
                     required
                     min="0"
@@ -120,12 +120,12 @@ const ProductForm: React.FC = () => {
                 />
             </div>
             <div className="form-group">
-                <label htmlFor="MinOrderQuantity">כמות מינימלית להזמנה:</label>
+                <label htmlFor="minOrderQuantity">כמות מינימלית להזמנה:</label>
                 <input
                     type="number"
-                    id="MinOrderQuantity"
-                    name="MinOrderQuantity"
-                    value={formData.MinOrderQuantity}
+                    id="minOrderQuantity"
+                    name="minOrderQuantity"
+                    value={formData.minOrderQuantity}
                     onChange={handleChange}
                     required
                     min="1"

@@ -10,7 +10,7 @@ export interface OrderItem {
 export interface Order {
     orderId?: number;
     userId: number;
-    items: OrderItem[];
+    items?: OrderItem[];
     status: OrderStatus;
     totalAmount: number;
     createdAt?: string;
