@@ -36,14 +36,7 @@ const SupplierPage: React.FC = () => {
                             ניהול הזמנות
                         </button>
                     </div>
-                    <div className="action-row">
-                        <button className="action-button" onClick={() => navigate('/supplier/inventory')}>
-                            ניהול מלאי
-                        </button>
-                        <button className="action-button" onClick={() => navigate('/supplier/reports')}>
-                            דוחות
-                        </button>
-                    </div>
+                  
                 </div>
 
                 <div className="orders-section">

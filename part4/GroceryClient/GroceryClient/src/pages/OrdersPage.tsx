@@ -167,6 +167,34 @@ const OrdersPage: React.FC = () => {
         }
     };
 
+    const handleUpdateStatus = async (orderId: number) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('לא נמצא טוקן התחברות');
+            }
+
+            const formData = new FormData();
+            formData.append('OrderId', orderId.toString());
+            formData.append('Status', 'COMPLETED');
+            formData.append('CreatedDate', new Date().toISOString());
+            formData.append('Products', JSON.stringify([]));
+
+            await axios.put(`https://localhost:7012/api/Order/${orderId}`, formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            // Refresh orders after update
+            fetchOrders();
+        } catch (err) {
+            console.error('Error updating order status:', err);
+            setError('שגיאה בעדכון סטטוס ההזמנה');
+        }
+    };
+
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('he-IL');
@@ -280,16 +308,33 @@ const OrdersPage: React.FC = () => {
                             </div>
                             <div className="order-status">
                                 סטטוס: {order.status}
+                                {order.status !== OrderStatus.COMPLETED && order.orderId && (
+                                    <button 
+                                        className="complete-order-button"
+                                        onClick={() => handleUpdateStatus(order.orderId as number)}
+                                    >
+                                        סיים הזמנה
+                                    </button>
+                                )}
                             </div>
                             <div className="order-items">
                                 <h4>פריטים בהזמנה:</h4>
-                                <ul>
-                                    {order.items?.map((item) => (
-                                        <li key={item.id}>
-                                            {item.productName} - {item.quantity} יחידות - ₪{item.price}
-                                        </li>
-                                    )) || <li>אין פריטים בהזמנה</li>}
-                                </ul>
+                                <div className="order-items-list">
+                                    {order.items && order.items.length > 0 ? (
+                                        order.items.map((item) => (
+                                            <div key={item.id} className="order-item-card">
+                                                <div className="order-item-details">
+                                                    <p><strong>שם המוצר:</strong> {item.productName}</p>
+                                                    <p><strong>כמות:</strong> {item.quantity}</p>
+                                                    <p><strong>מחיר ליחידה:</strong> ₪{item.price}</p>
+                                                    <p><strong>סה"כ לפריט:</strong> ₪{(item.price * item.quantity).toFixed(2)}</p>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <p className="no-items">אין פריטים בהזמנה</p>
+                                    )}
+                                </div>
                             </div>
                             <div className="order-total">
                                 סה"כ: ₪{order.totalAmount || 0}

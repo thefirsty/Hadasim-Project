@@ -28,35 +28,14 @@ const AdminPage: React.FC = () => {
                 
                 <div className="admin-actions">
                     <div className="action-row">
-                        <button className="action-button" onClick={() => navigate('/admin/products')}>
-                            ניהול מוצרים
-                        </button>
+                       
                         <button className="action-button" onClick={() => navigate('/orders')}>
                             צפייה בהזמנות
                         </button>
-                        <button className="action-button" onClick={() => navigate('/admin/suppliers')}>
-                            ניהול ספקים
-                        </button>
+                        
                     </div>
-                    <div className="action-row">
-                        <button className="action-button" onClick={() => navigate('/admin/categories')}>
-                            ניהול קטגוריות
-                        </button>
-                        <button className="action-button" onClick={() => navigate('/admin/reports')}>
-                            דוחות וסטטיסטיקות
-                        </button>
-                        <button className="action-button" onClick={() => navigate('/admin/users')}>
-                            ניהול משתמשים
-                        </button>
-                    </div>
-                    <div className="action-row">
-                        <button className="action-button" onClick={() => navigate('/admin/promotions')}>
-                            ניהול מבצעים
-                        </button>
-                        <button className="action-button" onClick={() => navigate('/admin/settings')}>
-                            הגדרות מערכת
-                        </button>
-                    </div>
+                    
+                    
                 </div>
             </main>
         </div>
