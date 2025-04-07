@@ -13,5 +13,7 @@ namespace Common.Dto
         public int SupplierId { get; set; }
         public string Status { get; set; }
         public DateTime CreatedDate { get; set; }
+        public List<OrderItemDto> Products { get; set; }
+
     }
 }

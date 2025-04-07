@@ -16,10 +16,14 @@ namespace Repository.Entities
         public virtual Supplier Supplier { get; set; }
         public string Status { get; set; }
         public DateTime CreatedDate { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
 
 
-        
+
+
+
+
 
     }
 }

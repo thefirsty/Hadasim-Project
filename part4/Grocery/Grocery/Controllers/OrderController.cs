@@ -73,7 +73,7 @@ namespace Grocery.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
 
-        public IActionResult Post([FromForm] OrderDto value)
+        public IActionResult Post([FromBody] OrderDto value)
         {
             try
             {

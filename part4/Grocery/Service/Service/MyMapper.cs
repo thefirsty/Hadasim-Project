@@ -20,7 +20,10 @@ namespace Service.Service
 
             CreateMap<Supplier, SupplierDto>().ReverseMap();
 
-            CreateMap<Order, OrderDto>().ReverseMap();
+            CreateMap<Order, OrderDto>()
+                .ForMember(dest => dest.Products, opt => opt.MapFrom(src => src.OrderItems))
+                .ReverseMap()
+                .ForMember(dest => dest.OrderItems, opt => opt.MapFrom(src => src.Products));
 
             CreateMap<OrderItem, OrderItemDto>().ReverseMap();
    
