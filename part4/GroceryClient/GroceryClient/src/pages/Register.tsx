@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authService } from '../services/authService';
 import { supplierService, SupplierDto } from '../services/supplierService';
 import './Register.css';
 
@@ -12,11 +11,13 @@ const Register: React.FC = () => {
     const [companyName, setCompanyName] = useState('');
     const [phone, setPhone] = useState('');
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+        setSuccess('');
 
         if (password !== confirmPassword) {
             setError('הסיסמאות אינן תואמות');
@@ -24,30 +25,23 @@ const Register: React.FC = () => {
         }
 
         try {
-            // First register the user
-            const registerData = {
-                UserId: 0,
-                Role: 'SUPPLIER',
-                Password: password,
-                Email: email
-            };
-            const authResponse = await authService.register(registerData);
-
-            if (!authResponse.userId) {
-                throw new Error('הרשמת המשתמש נכשלה - חסר מזהה משתמש');
-            }
-
-            // Then create the supplier with the user's ID
             const supplierData: SupplierDto = {
                 SupplierId: 0,
                 ContactName: contactName,
                 CompanyName: companyName,
                 Phone: phone,
-                UserId: authResponse.userId
+                UserId: 0,
+                Role: 'SUPPLIER',
+                Password: password,
+                Email: email
             };
+
             await supplierService.createSupplier(supplierData);
             
-            navigate('/login');
+            setSuccess('ההרשמה בוצעה בהצלחה! מעביר אותך לדף ההתחברות...');
+            setTimeout(() => {
+                navigate('/login');
+            }, 2000);
         } catch (err) {
             console.error('Registration error:', err);
             if (err instanceof Error) {
@@ -62,6 +56,7 @@ const Register: React.FC = () => {
         <div className="register-container">
             <h2>הרשמה</h2>
             {error && <div className="error-message">{error}</div>}
+            {success && <div className="success-message">{success}</div>}
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label>אימייל:</label>

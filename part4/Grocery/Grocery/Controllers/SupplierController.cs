@@ -14,13 +14,14 @@ namespace Grocery.Controllers
     {
         private readonly IService<SupplierDto> _supplierService;
         private readonly ISupplierService _extensionSupplierService;
+        private readonly IService<UserDto> _userService;
 
 
-        public SupplierController(IService<SupplierDto> supplierService, ISupplierService extensionSupplierService)
+        public SupplierController(IService<SupplierDto> supplierService, ISupplierService extensionSupplierService, IService<UserDto> userService)
         {
             _supplierService = supplierService;
             _extensionSupplierService = extensionSupplierService;
-
+            _userService = userService;
         }
         // GET: api/<SupplierController>
         [HttpGet]
@@ -83,7 +84,14 @@ namespace Grocery.Controllers
                     return BadRequest("Invalid supplier data.");
                 }
 
-                _supplierService.Add(value);
+                var userDto = new UserDto();
+                userDto.Email = value.Email;
+                userDto.Password = value.Password;
+                userDto.Role = "SUPPLIER";
+                var u = _userService.Add(userDto);
+                value.UserId = u.UserId;
+
+                var s = _supplierService.Add(value);
                 return Ok("supplier added successfully.");
             }
             catch (Exception ex)

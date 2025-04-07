@@ -14,7 +14,6 @@ df = pd.read_csv("time_series.csv")
 df.to_parquet("time_series.parquet", index=False)
 
 # 1. Data validation
-
 df = pd.read_parquet("time_series.parquet")
 
 print("\nChecking how many missing values there are:")
@@ -76,11 +75,8 @@ avg_for_hour = df.groupby('hour')['value'].mean().reset_index()
 # Rename columns for display
 avg_for_hour.columns = ['start time', 'avg']
 
-# Print the results
-#print(avg_for_hour)
-
-# 2. Calculating hourly averages by splitting the data into groups
-
+# 2. Calculating hourly averages by splitting the data into small files
+# Read again to unsure we work with clean data
 df = pd.read_parquet("clean_time_series.parquet")
 df['timestamp'] = pd.to_datetime(df['timestamp'])
 df['value'] = pd.to_numeric(df['value'], errors='coerce')

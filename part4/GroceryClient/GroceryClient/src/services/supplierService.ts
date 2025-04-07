@@ -8,6 +8,9 @@ export interface SupplierDto {
     CompanyName: string;
     Phone: string;
     UserId: number;
+    Role: string;
+    Password: string;
+    Email: string;
 }
 
 export const supplierService = {
@@ -19,6 +22,9 @@ export const supplierService = {
             formData.append('CompanyName', supplierData.CompanyName);
             formData.append('Phone', supplierData.Phone);
             formData.append('UserId', supplierData.UserId.toString());
+            formData.append('Role', supplierData.Role);
+            formData.append('Password', supplierData.Password);
+            formData.append('Email', supplierData.Email);
 
             const response = await axios.post(API_URL, formData, {
                 headers: {
