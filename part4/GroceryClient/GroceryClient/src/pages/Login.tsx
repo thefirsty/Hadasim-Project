@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { authService, LoginDto } from '../services/authService';
 import './Auth.css';
 
 const Login: React.FC = () => {
-    const navigate = useNavigate();
     const [formData, setFormData] = useState<LoginDto>({
         email: '',
         password: ''
@@ -28,6 +26,9 @@ const Login: React.FC = () => {
         try {
             const response = await authService.login(formData);
             console.log('Login response:', response);
+            console.log('Role type:', typeof response.role);
+            console.log('Role value:', response.role);
+            console.log('Role uppercase:', response.role?.toUpperCase());
             localStorage.setItem('token', response.token);
             localStorage.setItem('role', response.role);
             
@@ -36,13 +37,18 @@ const Login: React.FC = () => {
                 role: localStorage.getItem('role')
             });
             
-            // Redirect based on user role
-            if (response.role === 'ADMIN') {
+            // Redirect based on user role using direct navigation
+            const userRole = response.role;
+            console.log('User role for navigation:', userRole);
+            
+            if (userRole === 'Admin') {
                 console.log('Redirecting to admin page');
-                navigate('/admin');
-            } else if (response.role === 'SUPPLIER') {
+                window.location.href = '/admin';
+            } else if (userRole === 'Supplier') {
                 console.log('Redirecting to supplier page');
-                navigate('/supplier');
+                window.location.href = '/supplier';
+            } else {
+                console.log('Unknown role:', userRole);
             }
         } catch (err) {
             if (err && typeof err === 'object' && 'response' in err) {

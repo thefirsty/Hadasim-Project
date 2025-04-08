@@ -16,6 +16,7 @@ const OrdersPage: React.FC = () => {
     const [error, setError] = useState<string>('');
     const [showNewOrderForm, setShowNewOrderForm] = useState<boolean>(false);
     const [products, setProducts] = useState<Product[]>([]);
+    const [currentSupplierId, setCurrentSupplierId] = useState<number | null>(null);
     const [newOrder, setNewOrder] = useState<Order>({
         items: [],
         status: OrderStatus.PENDING,
@@ -90,7 +91,17 @@ const OrdersPage: React.FC = () => {
     };
 
     const handleAddOrderItem = () => {
-        if (selectedProduct && quantity >= selectedProduct.minOrderQuantity) {
+        if (!selectedProduct) return;
+
+        // Check if this is the first item or if supplier matches current supplier
+        if (currentSupplierId === null) {
+            setCurrentSupplierId(selectedProduct.supplierId);
+        } else if (selectedProduct.supplierId !== currentSupplierId) {
+            alert('לא ניתן להוסיף מוצרים מספקים שונים באותה הזמנה');
+            return;
+        }
+
+        if (quantity >= selectedProduct.minOrderQuantity) {
             const item: OrderItem = {
                 id: 0,
                 productId: selectedProduct.productId!,
@@ -108,7 +119,7 @@ const OrdersPage: React.FC = () => {
 
             setSelectedProduct(null);
             setQuantity(1);
-        } else if (selectedProduct) {
+        } else {
             alert(`כמות מינימלית להזמנה: ${selectedProduct.minOrderQuantity}`);
         }
     };
@@ -126,17 +137,10 @@ const OrdersPage: React.FC = () => {
                 return;
             }
 
-            // מציאת ה-SupplierId של המוצר הראשון בהזמנה
-            const firstProductId = newOrder.items[0].productId;
-            const firstProduct = products.find(p => p.productId === firstProductId);
-            if (!firstProduct) {
-                throw new Error('לא נמצא ספק למוצר');
-            }
-
             // הכנת אובייקט ההזמנה בפורמט הנכון
             const orderData = {
                 orderId: 0,
-                supplierId: firstProduct.supplierId,
+                supplierId: currentSupplierId,
                 status: OrderStatus.PENDING,
                 createdDate: new Date().toISOString(),
                 products: newOrder.items.map(item => ({
@@ -166,6 +170,7 @@ const OrdersPage: React.FC = () => {
                 totalAmount: 0,
                 userId: 0
             });
+            setCurrentSupplierId(null);
             fetchOrders();
         } catch (err) {
             console.error('Error creating order:', err);
