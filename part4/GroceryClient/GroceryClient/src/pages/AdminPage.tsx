@@ -21,8 +21,7 @@ const AdminPage: React.FC = () => {
             </header>
             
             <main className="admin-content">
-                <div className="admin-section">
-                </div>
+                
                 
                 <div className="admin-actions">
                     <div className="action-row">

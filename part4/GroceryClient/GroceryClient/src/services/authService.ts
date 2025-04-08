@@ -92,44 +92,15 @@ export const authService = {
 
             console.log('Server response:', response.data);
 
-            // If registration is successful, try to login to get the ID
-            if (response.data === 'user added successfully') {
-                console.log('Registration successful, attempting login...');
-                let attempts = 0;
-                const maxAttempts = 5;
-                const delay = 2000; // 2 seconds between attempts
-
-                while (attempts < maxAttempts) {
-                    try {
-                        // Wait a bit before each attempt
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                        
-                        // Try to login with the same details
-                        console.log(`Login attempt ${attempts + 1}...`);
-                        const loginResponse = await this.login({
-                            email: registerDto.Email,
-                            password: registerDto.Password
-                        });
-                        
-                        if (loginResponse.userId) {
-                            console.log('Login after registration successful:', loginResponse);
-                            return loginResponse;
-                        }
-                        
-                        attempts++;
-                        console.log(`Login attempt ${attempts} failed, retrying...`);
-                    } catch (loginError) {
-                        attempts++;
-                        console.log(`Login attempt ${attempts} failed:`, loginError);
-                        if (attempts === maxAttempts) {
-                            throw new Error('Could not get user ID. Please try to login manually.');
-                        }
-                    }
-                }
-                throw new Error('Could not login after registration. Please try to login manually.');
-            } else {
-                throw new Error('Registration failed - unexpected server response');
+            if (response.data && response.data.token) {
+                const role = extractRoleFromToken(response.data.token);
+                return {
+                    ...response.data,
+                    role: role
+                };
             }
+
+            throw new Error('Registration failed - invalid server response');
         } catch (error) {
             console.error('Registration error details:', error);
             if (axios.isAxiosError(error)) {
