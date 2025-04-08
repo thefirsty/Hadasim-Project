@@ -3,6 +3,10 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { OrderStatus } from '../types/order';
 import './SupplierOrders.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchOrderItems } from '../store/orderItemSlice';
+import { RootState } from '../store/store';
+import { AppDispatch } from '../store/store';
 
 interface Order {
     orderId: number;
@@ -13,7 +17,8 @@ interface Order {
 }
 
 interface OrderItem {
-    orderItemId: number;
+    id?: number;
+    orderItemId?: number;
     productName: string;
     quantity: number;
     price: number;
@@ -24,6 +29,8 @@ interface TokenPayload {
 }
 
 const SupplierOrders: React.FC = () => {
+    const dispatch = useDispatch<AppDispatch>();
+    const { orderItems: allOrderItems } = useSelector((state: RootState) => state.orderItems);
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -105,7 +112,8 @@ const SupplierOrders: React.FC = () => {
 
     useEffect(() => {
         fetchOrders();
-    }, []);
+        dispatch(fetchOrderItems());
+    }, [dispatch]);
 
     if (loading) return <div>טוען הזמנות...</div>;
     if (error) return <div className="error">{error}</div>;
@@ -117,53 +125,64 @@ const SupplierOrders: React.FC = () => {
                 <p>אין הזמנות להצגה</p>
             ) : (
                 <div className="orders-list">
-                    {orders.map((order) => (
-                        <div key={order.orderId} className="order-card">
-                            <div className="order-header">
-                                <h3>הזמנה #{order.orderId}</h3>
-                                <span className="order-date">
-                                    {new Date(order.createdAt).toLocaleDateString('he-IL')}
-                                </span>
-                            </div>
-                            <div className="order-status">
-                                {order.status === OrderStatus.COMPLETED ? (
-                                    <div className="completed-status">
-                                        <span>ההזמנה התקבלה אצל בעל החנות</span>
-                                    </div>
-                                ) : (
-                                    <>
-                                        <span>סטטוס: {order.status}</span>
-                                        {order.status !== OrderStatus.PROCESSING && (
-                                            <button 
-                                                className="update-status-button"
-                                                onClick={() => updateOrderStatus(order.orderId)}
-                                            >
-                                                התחל לעבד הזמנה
-                                            </button>
-                                        )}
-                                    </>
-                                )}
-                            </div>
-                            {order.orderItems && order.orderItems.length > 0 && (
+                    {orders.map((order) => {
+                        // Get all items for this order from both sources
+                        const orderItemsFromStore = allOrderItems.filter(item => item.orderId === order.orderId);
+                        const allItems = [...(order.orderItems || []), ...orderItemsFromStore];
+                        const totalAmount = allItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+                        return (
+                            <div key={order.orderId} className="order-card">
+                                <div className="order-header">
+                                    <h3>הזמנה #{order.orderId}</h3>
+                                    <span className="order-date">
+                                        {new Date(order.createdAt).toLocaleDateString('he-IL')}
+                                    </span>
+                                </div>
+                                <div className="order-status">
+                                    {order.status === OrderStatus.COMPLETED ? (
+                                        <div className="completed-status">
+                                            <span>ההזמנה התקבלה אצל בעל החנות</span>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <span>סטטוס: {order.status}</span>
+                                            {order.status !== OrderStatus.PROCESSING && (
+                                                <button 
+                                                    className="update-status-button"
+                                                    onClick={() => updateOrderStatus(order.orderId)}
+                                                >
+                                                    התחל לעבד הזמנה
+                                                </button>
+                                            )}
+                                        </>
+                                    )}
+                                </div>
                                 <div className="order-items">
                                     <h4>פריטים בהזמנה:</h4>
                                     <div className="items-list">
-                                        {order.orderItems.map((item) => (
-                                            <div key={item.orderItemId} className="item-card">
-                                                <p><strong>שם המוצר:</strong> {item.productName}</p>
-                                                <p><strong>כמות:</strong> {item.quantity}</p>
-                                                <p><strong>מחיר ליחידה:</strong> ₪{item.price}</p>
-                                                <p><strong>סה"כ לפריט:</strong> ₪{(item.price * item.quantity).toFixed(2)}</p>
-                                            </div>
-                                        ))}
+                                        {allItems.length > 0 ? (
+                                            allItems.map((item, index) => (
+                                                <div key={`item-${index}-${order.orderId}`} className="item-card">
+                                                    <div className="order-item-details">
+                                                        <p><strong>שם המוצר:</strong> {item.productName}</p>
+                                                        <p><strong>כמות:</strong> {item.quantity}</p>
+                                                        <p><strong>מחיר ליחידה:</strong> ₪{item.price}</p>
+                                                        <p><strong>סה"כ לפריט:</strong> ₪{(item.price * item.quantity).toFixed(2)}</p>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <p className="no-items">אין פריטים בהזמנה</p>
+                                        )}
                                     </div>
                                 </div>
-                            )}
-                            <div className="order-total">
-                                סה"כ: ₪{order.totalAmount}
+                                <div className="order-total">
+                                    סה"כ: ₪{totalAmount.toFixed(2)}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             )}
         </div>
