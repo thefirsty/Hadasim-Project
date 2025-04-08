@@ -83,16 +83,20 @@ if __name__ == "__main__":
     display_top_errors(total_counter, N)
 
 
-# Time Complexity:
-# O(T) - Linear
-# Where T is the number of errors (lines) in the input file
+# Time Complexity: O(T + U log N)
+# Where:
+# T = total number of lines (errors) in the input file
+# U = number of unique error codes
+# N = number of top error codes to display
 # Explanation:
-# 1. Splitting the file - loops through all lines in the file and writes every fixed number of lines to a new file: total O(T)
-# 2. Counting error codes in each CHUNK - O(1) per line, so total for all CHUNKS is O(T)
-# 3. Merging all counts is proportional to the number of unique error codes, which is at most O(T)
-# 4. Finding the top N frequent codes - using most_common(N), which is O(T log T) in the worst case (if all codes are unique)
-# In the best case (few unique codes), it’s much less, so overall: O(T)
-# Total: O(T)*3 + O(T log T) = O(T log T)
+# 1. Splitting the file: Reads all T lines and writes them into chunks → O(T)
+# 2. Counting error codes in each chunk: Regex per line → O(1) per line, total O(T)
+# 3. Merging Counters: Updating the global Counter from each chunk → O(T)
+# 4. Getting top N error codes: most_common(N) uses a heap → O(U log N)
+# Therefore, the overall time complexity is: O(T + U log N)
+
 
 # Space Complexity:
-# ?
+# O(U + N)
+#U = the number of unique error codes.
+#N = the number of top error codes the user wants to display
