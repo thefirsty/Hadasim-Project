@@ -14,6 +14,7 @@ export interface Order {
     status: OrderStatus;
     totalAmount: number;
     createdAt?: string;
+    createdDate?: string;
     updatedAt?: string;
 }
 

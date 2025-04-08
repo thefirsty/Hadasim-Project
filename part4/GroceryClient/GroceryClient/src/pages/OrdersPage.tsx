@@ -210,11 +210,6 @@ const OrdersPage: React.FC = () => {
         }
     };
 
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('he-IL');
-    };
-
     const calculateItemTotal = (item: OrderItem) => {
         try {
             if (!item?.quantity) return 0;
@@ -349,7 +344,15 @@ const OrdersPage: React.FC = () => {
                                 <div className="order-header">
                                     <h3>Order #{order.orderId}</h3>
                                     <span className="order-date">
-                                        {order.createdAt ? formatDate(order.createdAt) : 'No date'}
+                                        {(order.createdAt || order.createdDate) ? 
+                                            new Date(order.createdAt || order.createdDate || '').toLocaleString('en-US', {
+                                                year: 'numeric',
+                                                month: 'long',
+                                                day: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            }) 
+                                            : 'No date available'}
                                     </span>
                                 </div>
                                 <div className="order-status">

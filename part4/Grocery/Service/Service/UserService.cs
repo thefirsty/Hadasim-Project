@@ -32,10 +32,8 @@ namespace Service.Service
         {
             var entity = _mapper.Map<User>(item);
 
-            // הצפנת הסיסמה לפני השמירה
             entity.Password = _passwordHasher.HashPassword(null, item.Password);
 
-            // שמירת המשתמש בבסיס הנתונים
             var savedEntity = _repository.Add(entity);
 
             return _mapper.Map<UserDto>(savedEntity);

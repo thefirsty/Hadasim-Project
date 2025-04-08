@@ -18,7 +18,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+   
 
     // ????? ????? ?-Authorization ??????? Bearer Token
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -28,7 +28,7 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "?? ????? ?? ?-JWT ??? ??????: Bearer {token}"
+        Description = "Your token has to be in this format: Bearer {token}"
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement

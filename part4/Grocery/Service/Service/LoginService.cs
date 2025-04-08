@@ -24,7 +24,7 @@ namespace Service.Services
             this._userService = userService;
             this._extensionUserService = extensionUserService;
             this._configuration = configuration;
-            this._passwordHasher = new PasswordHasher<string>(); // יצירת אובייקט להצפנת סיסמאות
+            this._passwordHasher = new PasswordHasher<string>(); 
 
         }
 
@@ -44,14 +44,13 @@ namespace Service.Services
                     return null;
                 }
 
-                // אימות הסיסמה המוצפנת
                 var result = _passwordHasher.VerifyHashedPassword(null, user.Password, password);
                 if (result != PasswordVerificationResult.Success)
                 {
                     return null;
                 }
 
-                return GenerateToken(user); // מחזיר טוקן אם הסיסמה נכונה
+                return GenerateToken(user); 
             }
             catch (Exception ex)
             {
