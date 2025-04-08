@@ -8,6 +8,9 @@ import { fetchOrderItems } from '../store/orderItemSlice';
 import { RootState } from '../store/store';
 import { AppDispatch } from '../store/store';
 
+// Define a type for the products map
+type ProductsMap = Record<number, Product>;
+
 const OrdersPage: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { orderItems: allOrderItems } = useSelector((state: RootState) => state.orderItems);
@@ -15,7 +18,7 @@ const OrdersPage: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>('');
     const [showNewOrderForm, setShowNewOrderForm] = useState<boolean>(false);
-    const [products, setProducts] = useState<Product[]>([]);
+    const [productsMap, setProductsMap] = useState<ProductsMap>({});
     const [currentSupplierId, setCurrentSupplierId] = useState<number | null>(null);
     const [newOrder, setNewOrder] = useState<Order>({
         items: [],
@@ -45,18 +48,19 @@ const OrdersPage: React.FC = () => {
                     'accept': '*/*'
                 }
             });
-
-            console.log('Products response:', response.data);
             
-            // וידוא שהנתונים תקינים
-            const validProducts = response.data.filter(product => 
-                product.productName && 
-                typeof product.unitPrice === 'number' && 
-                typeof product.minOrderQuantity === 'number'
-            );
+            // Convert array to map for easier lookup
+            const newProductsMap: Record<number, Product> = {};
+            response.data.forEach(product => {
+                if (product.productName && 
+                    typeof product.unitPrice === 'number' && 
+                    typeof product.minOrderQuantity === 'number' &&
+                    typeof product.productId === 'number') {
+                    newProductsMap[product.productId] = product;
+                }
+            });
             
-            console.log('Valid products:', validProducts);
-            setProducts(validProducts);
+            setProductsMap(newProductsMap);
         } catch (err) {
             console.error('Error fetching products:', err);
             setError('שגיאה בטעינת המוצרים');
@@ -211,6 +215,33 @@ const OrdersPage: React.FC = () => {
         return date.toLocaleDateString('he-IL');
     };
 
+    const calculateItemTotal = (item: OrderItem) => {
+        try {
+            if (!item?.quantity) return 0;
+            const productId = item.productId;
+            if (typeof productId === 'number') {
+                const product = productsMap[productId];
+                if (product) {
+                    return product.unitPrice * item.quantity;
+                }
+            }
+            return (item.price || 0) * item.quantity; // Fallback to item price if product not found
+        } catch (error) {
+            console.error('Error calculating item total:', error);
+            return 0;
+        }
+    };
+
+    const calculateOrderTotal = (items: OrderItem[]) => {
+        try {
+            if (!items || !Array.isArray(items)) return 0;
+            return items.reduce((sum, item) => sum + calculateItemTotal(item), 0);
+        } catch (error) {
+            console.error('Error calculating order total:', error);
+            return 0;
+        }
+    };
+
     if (loading) {
         return <div className="orders-container">Loading orders...</div>;
     }
@@ -236,9 +267,7 @@ const OrdersPage: React.FC = () => {
                                 value={selectedProduct?.productId || ''}
                                 onChange={(e) => {
                                     const selectedId = parseInt(e.target.value);
-                                    console.log('Selected ID:', selectedId);
-                                    const product = products.find(p => p.productId === selectedId);
-                                    console.log('Found product:', product);
+                                    const product = productsMap[selectedId];
                                     setSelectedProduct(product || null);
                                     if (product) {
                                         setQuantity(product.minOrderQuantity);
@@ -247,7 +276,7 @@ const OrdersPage: React.FC = () => {
                                 className="product-select"
                             >
                                 <option value="">Select Product</option>
-                                {products.map(product => (
+                                {Object.values(productsMap).map(product => (
                                     <option key={product.productId} value={product.productId}>
                                         {product.productName} - Price: ₪{product.unitPrice.toFixed(2)} - Min Order: {product.minOrderQuantity}
                                     </option>
@@ -312,7 +341,6 @@ const OrdersPage: React.FC = () => {
             ) : (
                 <div className="orders-list">
                     {orders.map((order) => {
-                        // Get all items for this order from Redux store
                         const orderItemsFromStore = allOrderItems.filter(item => item.orderId === order.orderId);
                         const allItems = [...(order.items || []), ...orderItemsFromStore];
                         
@@ -320,7 +348,9 @@ const OrdersPage: React.FC = () => {
                             <div key={order.orderId} className="order-card">
                                 <div className="order-header">
                                     <h3>Order #{order.orderId}</h3>
-                                    <span className="order-date">{formatDate(order.createdAt || '')}</span>
+                                    <span className="order-date">
+                                        {order.createdAt ? formatDate(order.createdAt) : 'No date'}
+                                    </span>
                                 </div>
                                 <div className="order-status">
                                     Status: {order.status}
@@ -337,23 +367,28 @@ const OrdersPage: React.FC = () => {
                                     <h4>Order Items:</h4>
                                     <div className="order-items-list">
                                         {allItems.length > 0 ? (
-                                            allItems.map((item) => (
-                                                <div key={`${item.id}-${item.orderId}`} className="order-item-card">
-                                                    <div className="order-item-details">
-                                                        <p><strong>Product Name:</strong> {item.productName}</p>
-                                                        <p><strong>Quantity:</strong> {item.quantity}</p>
-                                                        <p><strong>Unit Price:</strong> ₪{item.price}</p>
-                                                        <p><strong>Total for Item:</strong> ₪{(item.price * item.quantity).toFixed(2)}</p>
+                                            allItems.map((item) => {
+                                                const product = productsMap[item.productId];
+                                                const itemTotal = calculateItemTotal(item);
+                                                
+                                                return (
+                                                    <div key={`${item.id}-${item.orderId}`} className="order-item-card">
+                                                        <div className="order-item-details">
+                                                            <p><strong>Product Name:</strong> {product ? product.productName : item.productName}</p>
+                                                            <p><strong>Quantity:</strong> {item.quantity}</p>
+                                                            <p><strong>Unit Price:</strong> ₪{product ? product.unitPrice.toFixed(2) : (item.price || 0).toFixed(2)}</p>
+                                                            <p><strong>Total for Item:</strong> ₪{itemTotal.toFixed(2)}</p>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ))
+                                                );
+                                            })
                                         ) : (
                                             <p className="no-items">No items in order</p>
                                         )}
                                     </div>
                                 </div>
                                 <div className="order-total">
-                                    Total: ₪{allItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
+                                    Total: ₪{calculateOrderTotal(allItems).toFixed(2)}
                                 </div>
                             </div>
                         );

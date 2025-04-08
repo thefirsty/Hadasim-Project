@@ -38,13 +38,13 @@ const Login: React.FC = () => {
             });
             
             // Redirect based on user role using direct navigation
-            const userRole = response.role;
+            const userRole = response.role?.toUpperCase();
             console.log('User role for navigation:', userRole);
             
-            if (userRole === 'Admin') {
+            if (userRole === 'ADMIN') {
                 console.log('Redirecting to admin page');
                 window.location.href = '/admin';
-            } else if (userRole === 'Supplier') {
+            } else if (userRole === 'SUPPLIER') {
                 console.log('Redirecting to supplier page');
                 window.location.href = '/supplier';
             } else {

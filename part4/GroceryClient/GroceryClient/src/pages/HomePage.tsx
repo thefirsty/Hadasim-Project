@@ -100,17 +100,7 @@ const HomePage: React.FC = () => {
                     </div>
                 )}
                 
-                <div className="features">
-                    <div className="feature-card">
-                        <h3>Quick Ordering</h3>
-                    </div>
-                    <div className="feature-card">
-                        <h3>Order Tracking</h3>
-                    </div>
-                    <div className="feature-card">
-                        <h3>Competitive Prices</h3>
-                    </div>
-                </div>
+               
             </main>
         </div>
     );
