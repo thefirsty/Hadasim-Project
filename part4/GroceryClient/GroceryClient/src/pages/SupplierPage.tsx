@@ -36,10 +36,10 @@ const SupplierPage: React.FC = () => {
                             ניהול הזמנות
                         </button>
                     </div>
-                  
                 </div>
 
                 <div className="orders-section">
+                    <h2>הזמנות אחרונות</h2>
                     <SupplierOrders />
                 </div>
             </main>

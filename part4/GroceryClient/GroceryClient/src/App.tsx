@@ -9,6 +9,7 @@ import AdminPage from './pages/AdminPage';
 import OrdersPage from './pages/OrdersPage';
 import SupplierPage from './pages/SupplierPage';
 import SupplierProductsPage from './pages/SupplierProductsPage';
+import SupplierOrdersPage from './pages/SupplierOrdersPage';
 import './App.css';
 
 
@@ -23,6 +24,7 @@ const App: React.FC = () => {
                     <Route path="/admin" element={<AdminPage />} />
                     <Route path="/supplier" element={<SupplierPage />} />
                     <Route path="/supplier/products" element={<SupplierProductsPage />} />
+                    <Route path="/supplier/orders" element={<SupplierOrdersPage />} />
                     <Route path="/orders" element={<OrdersPage />} />
                 </Routes>
             </Router>

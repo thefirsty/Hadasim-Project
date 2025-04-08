@@ -1,34 +1,101 @@
 .supplier-orders {
-    margin: 20px;
     direction: rtl;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-.orders-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+.supplier-orders h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.order-card {
     background-color: white;
+    border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
 }
 
-.orders-table th,
-.orders-table td {
-    padding: 12px;
-    text-align: right;
-    border-bottom: 1px solid #ddd;
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
 }
 
-.orders-table th {
+.order-header h3 {
+    margin: 0;
+    color: #333;
+}
+
+.order-date {
+    color: #666;
+}
+
+.order-status {
+    margin-bottom: 15px;
+    padding: 8px 12px;
     background-color: #f5f5f5;
-    font-weight: bold;
+    border-radius: 4px;
+    display: inline-block;
 }
 
-.orders-table tr:hover {
+.order-items {
+    margin-bottom: 15px;
+}
+
+.order-items h4 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.items-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.item-card {
     background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #eee;
+}
+
+.item-card p {
+    margin: 5px 0;
+}
+
+.item-card strong {
+    color: #333;
+    margin-left: 5px;
+}
+
+.order-total {
+    text-align: left;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #1a237e;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
 }
 
 .error {
-    color: red;
+    color: #d32f2f;
     text-align: center;
-    margin: 20px;
+    padding: 20px;
+    background-color: #ffebee;
+    border-radius: 8px;
+    margin: 20px 0;
 } 
