@@ -4,6 +4,11 @@
 A full-stack web application for managing a grocery store, built with modern technologies.
 אפליקציית ווב מלאה לניהול חנות מכולת, בנויה עם טכנולוגיות מודרניות.
 
+המייל של בעל המכולת הוא :
+g111@g.g
+והסיסמא שלו:
+g111@g.g
+
 ## Project Overview | סקירת הפרויקט
 
 This project consists of two main parts:
@@ -35,6 +40,7 @@ Before running the project, make sure you have:
 ### For Client | לצד לקוח
 - Node.js (v18 or higher)
 - npm or yarn package manager
+
 
 ### For Server | לצד שרת
 - .NET SDK 6.0 or higher
