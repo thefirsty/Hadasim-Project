@@ -1,16 +1,16 @@
-﻿-- יצירת טבלה עם נתונים לדוגמא
+﻿-- Creating a table with sample data
 CREATE TABLE Persons (
     Person_Id INT PRIMARY KEY,
-    Personal_Name VARCHAR(100),
-    Family_Name VARCHAR(100),
+    First_Name VARCHAR(100),
+    Last_Name VARCHAR(100),
     Gender VARCHAR(10),
     Father_Id INT,
     Mother_Id INT,
     Spouse_Id INT
 );
 
---הכנסת נתונים לדוגמא
-INSERT INTO Persons (Person_Id, Personal_Name, Family_Name, Gender, Father_Id, Mother_Id, Spouse_Id) VALUES
+-- Inserting sample data
+INSERT INTO Persons (Person_Id, First_Name, Last_Name, Gender, Father_Id, Mother_Id, Spouse_Id) VALUES
 (9, 'Dan', 'Dror', 'Male', NULL, NULL, 10),
 (10, 'Dina', 'Levi', 'Female', NULL, NULL, NULL),
 (8, 'Yair', 'Dror', 'Male', NULL, NULL, 7),
@@ -23,59 +23,57 @@ INSERT INTO Persons (Person_Id, Personal_Name, Family_Name, Gender, Father_Id, M
 (6, 'Noam', 'Cohen', 'Male', 3, 5, NULL);
 
 
---תרגיל 1
+-- Exercise 1
 
---יצירת טבלת הקשרים המשפחתיים
+-- Creating a table for family relationships
 CREATE TABLE Family_Relations (
     Person_Id INT,
     Relative_Id INT,
     Connection_Type NVARCHAR(20)
 );
 
-
-
 INSERT INTO Family_Relations (Person_Id, Relative_Id, Connection_Type)
 
--- קשרים של אב
+-- Father relationships
 SELECT 
     P.Person_Id,
     P.Father_Id AS Relative_Id,
-    N'אב' AS Connection_Type
+    N'Father' AS Connection_Type
 FROM Persons P
 WHERE P.Father_Id IS NOT NULL
 
 UNION
 
--- קשרים של אם
+-- Mother relationships
 SELECT 
     P.Person_Id,
     P.Mother_Id AS Relative_Id,
-    N'אם' AS Connection_Type
+    N'Mother' AS Connection_Type
 FROM Persons P
 WHERE P.Mother_Id IS NOT NULL
 
 UNION
 
--- קשרים של בן/בת זוג
+-- Spouse relationships
 SELECT 
     P.Person_Id,
     P.Spouse_Id AS Relative_Id,
     CASE P.Gender
-        WHEN N'Male' THEN N'בת זוג'
-        WHEN N'Female' THEN N'בן זוג'
+        WHEN N'Male' THEN N'Wife'
+        WHEN N'Female' THEN N'Husband'
     END AS Connection_Type
 FROM Persons P
 WHERE P.Spouse_Id IS NOT NULL
 
 UNION
 
--- קשרים של אחים ואחיות
+-- Sibling relationships
 SELECT 
     A.Person_Id,
     B.Person_Id AS Relative_Id,
     CASE B.Gender
-        WHEN N'Male' THEN N'אח'
-        WHEN N'Female' THEN N'אחות'
+        WHEN N'Male' THEN N'Brother'
+        WHEN N'Female' THEN N'Sister'
     END AS Connection_Type
 FROM Persons A
 JOIN Persons B
@@ -85,13 +83,13 @@ JOIN Persons B
 
 UNION
 
--- קשרים של בן/בת 
+-- Child relationships
 SELECT 
-    P.Person_Id,             -- ההורה
-    C.Person_Id AS Relative_Id, -- הילד
+    P.Person_Id,             -- Parent
+    C.Person_Id AS Relative_Id, -- Child
     CASE C.Gender
-        WHEN N'Male' THEN N'בן'
-        WHEN N'Female' THEN N'בת'
+        WHEN N'Male' THEN N'Son'
+        WHEN N'Female' THEN N'Daughter'
     END AS Connection_Type
 FROM Persons P
 JOIN Persons C
@@ -99,26 +97,27 @@ JOIN Persons C
    OR C.Mother_Id = P.Person_Id;
 
 
---תרגיל 2
+-- Exercise 2
 
--- הכנס קשרי בני/בנות זוג הפוכים שחסרים
+-- Insert missing reciprocal spouse relationships
 INSERT INTO Family_Relations (Person_Id, Relative_Id, Connection_Type)
 SELECT 
     fr.Relative_Id AS Person_Id,
     fr.Person_Id AS Relative_Id,
     CASE fr.Connection_Type
-        WHEN N'בן זוג' THEN N'בת זוג'
-        WHEN N'בת זוג' THEN N'בן זוג'
+        WHEN N'Husband' THEN N'Wife'
+        WHEN N'Wife' THEN N'Husband'
     END AS Connection_Type
 FROM Family_Relations fr
 LEFT JOIN Family_Relations fr2
     ON fr.Relative_Id = fr2.Person_Id
    AND fr.Person_Id = fr2.Relative_Id
    AND (
-       (fr.Connection_Type = N'בן זוג' AND fr2.Connection_Type = N'בת זוג') OR
-       (fr.Connection_Type = N'בת זוג' AND fr2.Connection_Type = N'בן זוג')
+       (fr.Connection_Type = N'Husband' AND fr2.Connection_Type = N'Wife') OR
+       (fr.Connection_Type = N'Wife' AND fr2.Connection_Type = N'Husband')
    )
-WHERE fr.Connection_Type IN (N'בן זוג', N'בת זוג')
+WHERE fr.Connection_Type IN (N'Husband', N'Wife')
   AND fr2.Person_Id IS NULL;
 
 
+select * from Family_Relations
