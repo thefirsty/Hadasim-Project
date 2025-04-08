@@ -13,9 +13,9 @@ const SupplierOrdersPage: React.FC = () => {
     return (
         <div className="supplier-orders-page">
             <header className="supplier-orders-header">
-                <h1>הזמנות</h1>
+                <h1>Orders</h1>
                 <button onClick={handleBack} className="back-button">
-                    חזרה לדף הבית
+                    Back to Home
                 </button>
             </header>
             

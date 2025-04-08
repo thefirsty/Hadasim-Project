@@ -20,7 +20,7 @@ const Register: React.FC = () => {
         setSuccess('');
 
         if (password !== confirmPassword) {
-            setError('הסיסמאות אינן תואמות');
+            setError('Passwords do not match');
             return;
         }
 
@@ -38,7 +38,7 @@ const Register: React.FC = () => {
 
             await supplierService.createSupplier(supplierData);
             
-            setSuccess('ההרשמה בוצעה בהצלחה! מעביר אותך לדף ההתחברות...');
+            setSuccess('Registration successful! Redirecting to login page...');
             setTimeout(() => {
                 navigate('/login');
             }, 2000);
@@ -47,19 +47,19 @@ const Register: React.FC = () => {
             if (err instanceof Error) {
                 setError(err.message);
             } else {
-                setError('אירעה שגיאה בעת ההרשמה. אנא נסה שוב.');
+                setError('An error occurred during registration. Please try again.');
             }
         }
     };
 
     return (
         <div className="register-container">
-            <h2>הרשמה</h2>
+            <h2>Register</h2>
             {error && <div className="error-message">{error}</div>}
             {success && <div className="success-message">{success}</div>}
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                    <label>אימייל:</label>
+                    <label>Email:</label>
                     <input
                         type="email"
                         value={email}
@@ -68,7 +68,7 @@ const Register: React.FC = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>סיסמה:</label>
+                    <label>Password:</label>
                     <input
                         type="password"
                         value={password}
@@ -77,7 +77,7 @@ const Register: React.FC = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>אימות סיסמה:</label>
+                    <label>Confirm Password:</label>
                     <input
                         type="password"
                         value={confirmPassword}
@@ -86,7 +86,7 @@ const Register: React.FC = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>שם איש קשר:</label>
+                    <label>Contact Name:</label>
                     <input
                         type="text"
                         value={contactName}
@@ -95,7 +95,7 @@ const Register: React.FC = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>שם החברה:</label>
+                    <label>Company Name:</label>
                     <input
                         type="text"
                         value={companyName}
@@ -104,7 +104,7 @@ const Register: React.FC = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>טלפון:</label>
+                    <label>Phone:</label>
                     <input
                         type="tel"
                         value={phone}
@@ -112,7 +112,7 @@ const Register: React.FC = () => {
                         required
                     />
                 </div>
-                <button type="submit">הרשמה</button>
+                <button type="submit">Register</button>
             </form>
         </div>
     );

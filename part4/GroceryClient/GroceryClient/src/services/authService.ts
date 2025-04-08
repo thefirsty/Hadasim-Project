@@ -66,7 +66,7 @@ export const authService = {
                 });
                 throw error;
             }
-            throw new Error('אירעה שגיאה לא צפויה במהלך ההתחברות');
+            throw new Error('An unexpected error occurred during login');
         }
     },
 
@@ -92,19 +92,19 @@ export const authService = {
 
             console.log('Server response:', response.data);
 
-            // אם ההרשמה הצליחה, ננסה להתחבר עד שנקבל את ה-ID
+            // If registration is successful, try to login to get the ID
             if (response.data === 'user added successfully') {
                 console.log('Registration successful, attempting login...');
                 let attempts = 0;
                 const maxAttempts = 5;
-                const delay = 2000; // 2 שניות בין ניסיונות
+                const delay = 2000; // 2 seconds between attempts
 
                 while (attempts < maxAttempts) {
                     try {
-                        // נחכה קצת לפני כל ניסיון
+                        // Wait a bit before each attempt
                         await new Promise(resolve => setTimeout(resolve, delay));
                         
-                        // נבצע לוגין עם אותם פרטים
+                        // Try to login with the same details
                         console.log(`Login attempt ${attempts + 1}...`);
                         const loginResponse = await this.login({
                             email: registerDto.Email,
@@ -122,22 +122,22 @@ export const authService = {
                         attempts++;
                         console.log(`Login attempt ${attempts} failed:`, loginError);
                         if (attempts === maxAttempts) {
-                            throw new Error('לא הצלחנו לקבל את מזהה המשתמש. אנא נסה להתחבר באופן ידני.');
+                            throw new Error('Could not get user ID. Please try to login manually.');
                         }
                     }
                 }
-                throw new Error('לא הצלחנו להתחבר לאחר ההרשמה. אנא נסה להתחבר באופן ידני.');
+                throw new Error('Could not login after registration. Please try to login manually.');
             } else {
-                throw new Error('הרשמה נכשלה - תגובה לא צפויה מהשרת');
+                throw new Error('Registration failed - unexpected server response');
             }
         } catch (error) {
             console.error('Registration error details:', error);
             if (axios.isAxiosError(error)) {
                 console.error('Axios error response:', error.response?.data);
                 const errorMessage = error.response?.data?.message || error.message;
-                throw new Error(`הרשמה נכשלה: ${errorMessage}`);
+                throw new Error(`Registration failed: ${errorMessage}`);
             }
-            throw new Error('אירעה שגיאה בעת ההרשמה');
+            throw new Error('An error occurred during registration');
         }
     }
 }; 

@@ -10,9 +10,9 @@ const SupplierProductsPage: React.FC = () => {
     return (
         <div className="supplier-products-container">
             <header className="supplier-products-header">
-                <h1>ניהול מוצרים</h1>
+                <h1>Product Management</h1>
                 <button onClick={() => navigate('/supplier')} className="back-button">
-                    חזרה לדף הבית
+                    Back to Home
                 </button>
             </header>
             

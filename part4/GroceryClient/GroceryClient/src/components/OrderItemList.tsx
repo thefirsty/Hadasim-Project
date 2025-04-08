@@ -26,7 +26,7 @@ const OrderItemList: React.FC = () => {
     }, [orderItems]);
 
     if (loading) {
-        return <div className="order-items-container">טוען פריטי הזמנה...</div>;
+        return <div className="order-items-container">Loading order items...</div>;
     }
 
     if (error) {
@@ -41,28 +41,28 @@ const OrderItemList: React.FC = () => {
 
     return (
         <div className="order-items-container">
-            <h2>פריטי הזמנה</h2>
+            <h2>Order Items</h2>
             {orderItems.length === 0 ? (
-                <p>לא נמצאו פריטי הזמנה</p>
+                <p>No order items found</p>
             ) : (
                 <div className="orders-container">
                     {Object.entries(groupedItems).map(([orderId, items]) => (
                         <div key={`order-${orderId}`} className="order-group">
-                            <h3 className="order-group-title">הזמנה #{orderId}</h3>
+                            <h3 className="order-group-title">Order #{orderId}</h3>
                             <div className="order-items-list">
                                 {items.map((item) => (
                                     <div key={`order-item-${item.id}-${item.orderId}`} className="order-item-card">
                                         <div className="order-item-details">
-                                            <p><strong>שם המוצר:</strong> {item.productName}</p>
-                                            <p><strong>כמות:</strong> {item.quantity}</p>
-                                            <p><strong>מחיר:</strong> ₪{item.price}</p>
-                                            <p><strong>סה"כ:</strong> ₪{(item.price * item.quantity).toFixed(2)}</p>
+                                            <p><strong>Product Name:</strong> {item.productName}</p>
+                                            <p><strong>Quantity:</strong> {item.quantity}</p>
+                                            <p><strong>Price:</strong> ₪{item.price}</p>
+                                            <p><strong>Total:</strong> ₪{(item.price * item.quantity).toFixed(2)}</p>
                                         </div>
                                     </div>
                                 ))}
                             </div>
                             <div className="order-group-total">
-                                <strong>סה"כ להזמנה:</strong> ₪{items.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
+                                <strong>Order Total:</strong> ₪{items.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
                             </div>
                         </div>
                     ))}

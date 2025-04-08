@@ -36,7 +36,7 @@ const OrdersPage: React.FC = () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                throw new Error('לא נמצא טוקן התחברות');
+                throw new Error('No authentication token found');
             }
 
             const response = await axios.get<Product[]>('https://localhost:7012/api/Product', {
@@ -67,7 +67,7 @@ const OrdersPage: React.FC = () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                throw new Error('לא נמצא טוקן התחברות');
+                throw new Error('No authentication token found');
             }
 
             const response = await axios.get('https://localhost:7012/api/Order', {
@@ -97,7 +97,7 @@ const OrdersPage: React.FC = () => {
         if (currentSupplierId === null) {
             setCurrentSupplierId(selectedProduct.supplierId);
         } else if (selectedProduct.supplierId !== currentSupplierId) {
-            alert('לא ניתן להוסיף מוצרים מספקים שונים באותה הזמנה');
+            alert('Cannot add products from different suppliers in the same order');
             return;
         }
 
@@ -120,7 +120,7 @@ const OrdersPage: React.FC = () => {
             setSelectedProduct(null);
             setQuantity(1);
         } else {
-            alert(`כמות מינימלית להזמנה: ${selectedProduct.minOrderQuantity}`);
+            alert(`Minimum order quantity: ${selectedProduct.minOrderQuantity}`);
         }
     };
 
@@ -128,12 +128,12 @@ const OrdersPage: React.FC = () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                throw new Error('לא נמצא טוקן התחברות');
+                throw new Error('No authentication token found');
             }
 
             // בדיקה שיש פריטים בהזמנה
             if (!newOrder.items || newOrder.items.length === 0) {
-                setError('לא ניתן ליצור הזמנה ריקה');
+                setError('Cannot create an empty order');
                 return;
             }
 
@@ -174,7 +174,7 @@ const OrdersPage: React.FC = () => {
             fetchOrders();
         } catch (err) {
             console.error('Error creating order:', err);
-            setError('שגיאה ביצירת ההזמנה');
+            setError('Error creating order');
         }
     };
 
@@ -182,7 +182,7 @@ const OrdersPage: React.FC = () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                throw new Error('לא נמצא טוקן התחברות');
+                throw new Error('No authentication token found');
             }
 
             const formData = new FormData();
@@ -202,7 +202,7 @@ const OrdersPage: React.FC = () => {
             fetchOrders();
         } catch (err) {
             console.error('Error updating order status:', err);
-            setError('שגיאה בעדכון סטטוס ההזמנה');
+            setError('Error updating order status');
         }
     };
 
@@ -212,25 +212,25 @@ const OrdersPage: React.FC = () => {
     };
 
     if (loading) {
-        return <div className="orders-container">טוען הזמנות...</div>;
+        return <div className="orders-container">Loading orders...</div>;
     }
 
     return (
         <div className="orders-container">
-            <h1>הזמנות</h1>
+            <h1>Orders</h1>
             
             <button 
                 className="add-order-button"
                 onClick={() => setShowNewOrderForm(!showNewOrderForm)}
             >
-                {showNewOrderForm ? 'ביטול' : 'הוסף הזמנה חדשה'}
+                {showNewOrderForm ? 'Cancel' : 'Add New Order'}
             </button>
 
             {showNewOrderForm && (
                 <div className="new-order-form">
-                    <h2>הזמנה חדשה</h2>
+                    <h2>New Order</h2>
                     <div className="order-items-form">
-                        <h3>הוסף פריטים להזמנה</h3>
+                        <h3>Add Items to Order</h3>
                         <div className="form-group">
                             <select
                                 value={selectedProduct?.productId || ''}
@@ -246,48 +246,48 @@ const OrdersPage: React.FC = () => {
                                 }}
                                 className="product-select"
                             >
-                                <option value="">בחר מוצר</option>
+                                <option value="">Select Product</option>
                                 {products.map(product => (
                                     <option key={product.productId} value={product.productId}>
-                                        {product.productName} - מחיר: ₪{product.unitPrice.toFixed(2)} - מינימום להזמנה: {product.minOrderQuantity}
+                                        {product.productName} - Price: ₪{product.unitPrice.toFixed(2)} - Min Order: {product.minOrderQuantity}
                                     </option>
                                 ))}
                             </select>
                             {selectedProduct && (
                                 <div className="selected-product-details">
-                                    <p><strong>שם המוצר:</strong> {selectedProduct.productName}</p>
-                                    <p><strong>מחיר ליחידה:</strong> ₪{selectedProduct.unitPrice.toFixed(2)}</p>
-                                    <p><strong>כמות מינימלית:</strong> {selectedProduct.minOrderQuantity}</p>
+                                    <p><strong>Product Name:</strong> {selectedProduct.productName}</p>
+                                    <p><strong>Unit Price:</strong> ₪{selectedProduct.unitPrice.toFixed(2)}</p>
+                                    <p><strong>Minimum Quantity:</strong> {selectedProduct.minOrderQuantity}</p>
                                     {quantity > 0 && (
                                         <p className="total-price">
-                                            <strong>סה"כ למוצר:</strong> ₪{(selectedProduct.unitPrice * quantity).toFixed(2)}
+                                            <strong>Total for Product:</strong> ₪{(selectedProduct.unitPrice * quantity).toFixed(2)}
                                         </p>
                                     )}
                                 </div>
                             )}
                             <input
                                 type="number"
-                                placeholder="כמות"
+                                placeholder="Quantity"
                                 value={quantity}
                                 onChange={(e) => setQuantity(parseInt(e.target.value))}
                                 min={selectedProduct?.minOrderQuantity || 1}
                             />
-                            <button onClick={handleAddOrderItem}>הוסף פריט</button>
+                            <button onClick={handleAddOrderItem}>Add Item</button>
                         </div>
 
                         <div className="order-items-list">
-                            <h3>פריטים בהזמנה</h3>
+                            <h3>Items in Order</h3>
                             {newOrder.items?.map((item, index) => (
                                 <div key={index} className="order-item-card">
                                     <p>{item.productName}</p>
-                                    <p>כמות: {item.quantity}</p>
-                                    <p>מחיר: ₪{item.price}</p>
+                                    <p>Quantity: {item.quantity}</p>
+                                    <p>Price: ₪{item.price}</p>
                                 </div>
                             ))}
                         </div>
 
                         <div className="order-total">
-                            <h3>סה"כ: ₪{newOrder.totalAmount}</h3>
+                            <h3>Total: ₪{newOrder.totalAmount}</h3>
                         </div>
 
                         <button 
@@ -295,7 +295,7 @@ const OrdersPage: React.FC = () => {
                             onClick={handleCreateOrder}
                             disabled={!newOrder.items?.length}
                         >
-                            צור הזמנה
+                            Create Order
                         </button>
                     </div>
                 </div>
@@ -308,7 +308,7 @@ const OrdersPage: React.FC = () => {
             )}
 
             {orders.length === 0 ? (
-                <p>לא נמצאו הזמנות</p>
+                <p>No orders found</p>
             ) : (
                 <div className="orders-list">
                     {orders.map((order) => {
@@ -319,41 +319,41 @@ const OrdersPage: React.FC = () => {
                         return (
                             <div key={order.orderId} className="order-card">
                                 <div className="order-header">
-                                    <h3>הזמנה #{order.orderId}</h3>
+                                    <h3>Order #{order.orderId}</h3>
                                     <span className="order-date">{formatDate(order.createdAt || '')}</span>
                                 </div>
                                 <div className="order-status">
-                                    סטטוס: {order.status}
+                                    Status: {order.status}
                                     {order.status !== OrderStatus.COMPLETED && order.orderId && (
                                         <button 
                                             className="complete-order-button"
                                             onClick={() => handleUpdateStatus(order.orderId as number)}
                                         >
-                                            סיים הזמנה
+                                            Complete Order
                                         </button>
                                     )}
                                 </div>
                                 <div className="order-items">
-                                    <h4>פריטים בהזמנה:</h4>
+                                    <h4>Order Items:</h4>
                                     <div className="order-items-list">
                                         {allItems.length > 0 ? (
                                             allItems.map((item) => (
                                                 <div key={`${item.id}-${item.orderId}`} className="order-item-card">
                                                     <div className="order-item-details">
-                                                        <p><strong>שם המוצר:</strong> {item.productName}</p>
-                                                        <p><strong>כמות:</strong> {item.quantity}</p>
-                                                        <p><strong>מחיר ליחידה:</strong> ₪{item.price}</p>
-                                                        <p><strong>סה"כ לפריט:</strong> ₪{(item.price * item.quantity).toFixed(2)}</p>
+                                                        <p><strong>Product Name:</strong> {item.productName}</p>
+                                                        <p><strong>Quantity:</strong> {item.quantity}</p>
+                                                        <p><strong>Unit Price:</strong> ₪{item.price}</p>
+                                                        <p><strong>Total for Item:</strong> ₪{(item.price * item.quantity).toFixed(2)}</p>
                                                     </div>
                                                 </div>
                                             ))
                                         ) : (
-                                            <p className="no-items">אין פריטים בהזמנה</p>
+                                            <p className="no-items">No items in order</p>
                                         )}
                                     </div>
                                 </div>
                                 <div className="order-total">
-                                    סה"כ: ₪{allItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
+                                    Total: ₪{allItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
                                 </div>
                             </div>
                         );

@@ -15,31 +15,29 @@ const SupplierPage: React.FC = () => {
     return (
         <div className="supplier-container">
             <header className="supplier-header">
-                <h1>דף הבית של הספק</h1>
+                <h1>Supplier Home Page</h1>
                 <button onClick={handleLogout} className="logout-button">
-                    התנתק
+                    Logout
                 </button>
             </header>
             
             <main className="supplier-content">
                 <div className="supplier-section">
-                    <h2>ברוך הבא למערכת הספקים</h2>
-                    <p>כאן תוכל לנהל את המוצרים וההזמנות שלך</p>
                 </div>
                 
                 <div className="supplier-actions">
                     <div className="action-row">
                         <button className="action-button" onClick={() => navigate('/supplier/products')}>
-                            ניהול מוצרים
+                            Manage Products
                         </button>
                         <button className="action-button" onClick={() => navigate('/supplier/orders')}>
-                            ניהול הזמנות
+                            Manage Orders
                         </button>
                     </div>
                 </div>
 
                 <div className="orders-section">
-                    <h2>הזמנות אחרונות</h2>
+                    <h2>Recent Orders</h2>
                     <SupplierOrders />
                 </div>
             </main>

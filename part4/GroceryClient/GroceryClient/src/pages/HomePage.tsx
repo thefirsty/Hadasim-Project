@@ -74,18 +74,17 @@ const HomePage: React.FC = () => {
     return (
         <div className="home-container">
             <header className="header">
-                <h1>מערכת הזמנת מוצרים למכולת</h1>
-                <p>הזמן בקלות את כל המוצרים שאתה צריך</p>
+                <h1>Grocery Store Order System</h1>
             </header>
             
             <main className="main-content">
                 {!isAuthenticated && (
                     <div className="auth-buttons">
                         <Link to="/register" className="auth-button register">
-                            הרשמה
+                            Register
                         </Link>
                         <Link to="/login" className="auth-button login">
-                            התחברות
+                            Login
                         </Link>
                     </div>
                 )}
@@ -96,23 +95,20 @@ const HomePage: React.FC = () => {
                             className="action-button orders"
                             onClick={() => navigate('/orders')}
                         >
-                            ההזמנות שלי
+                            My Orders
                         </button>
                     </div>
                 )}
                 
                 <div className="features">
                     <div className="feature-card">
-                        <h3>הזמנה מהירה</h3>
-                        <p>הזמן את המוצרים שאתה צריך בקלות ובמהירות</p>
+                        <h3>Quick Ordering</h3>
                     </div>
                     <div className="feature-card">
-                        <h3>מעקב הזמנות</h3>
-                        <p>עקוב אחרי כל ההזמנות שלך במקום אחד</p>
+                        <h3>Order Tracking</h3>
                     </div>
                     <div className="feature-card">
-                        <h3>מחירים תחרותיים</h3>
-                        <p>הנחות מיוחדות למשתמשים רשומים</p>
+                        <h3>Competitive Prices</h3>
                     </div>
                 </div>
             </main>

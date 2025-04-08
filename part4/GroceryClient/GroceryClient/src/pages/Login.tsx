@@ -53,9 +53,9 @@ const Login: React.FC = () => {
         } catch (err) {
             if (err && typeof err === 'object' && 'response' in err) {
                 const axiosError = err as { response?: { data?: { message?: string } } };
-                setError(axiosError.response?.data?.message || 'אירעה שגיאה במהלך ההתחברות');
+                setError(axiosError.response?.data?.message || 'An error occurred during login');
             } else {
-                setError('אירעה שגיאה במהלך ההתחברות');
+                setError('An error occurred during login');
             }
         } finally {
             setLoading(false);
@@ -65,11 +65,11 @@ const Login: React.FC = () => {
     return (
         <div className="auth-container">
             <div className="auth-box">
-                <h2>התחברות</h2>
+                <h2>Login</h2>
                 {error && <div className="error-message">{error}</div>}
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label htmlFor="email">אימייל</label>
+                        <label htmlFor="email">Email</label>
                         <input
                             type="email"
                             id="email"
@@ -80,7 +80,7 @@ const Login: React.FC = () => {
                         />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="password">סיסמה</label>
+                        <label htmlFor="password">Password</label>
                         <input
                             type="password"
                             id="password"
@@ -91,11 +91,11 @@ const Login: React.FC = () => {
                         />
                     </div>
                     <button type="submit" disabled={loading}>
-                        {loading ? 'מתבצעת התחברות...' : 'התחבר'}
+                        {loading ? 'Logging in...' : 'Login'}
                     </button>
                 </form>
                 <p className="auth-link">
-                    אין לך חשבון? <a href="/register">הירשם כאן</a>
+                    Don't have an account? <a href="/register">Register here</a>
                 </p>
             </div>
         </div>

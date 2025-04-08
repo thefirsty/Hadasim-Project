@@ -59,7 +59,7 @@ const SupplierOrders: React.FC = () => {
             fetchOrders();
         } catch (error) {
             console.error('Error updating order status:', error);
-            setError('שגיאה בעדכון סטטוס ההזמנה');
+            setError('Error updating order status');
         }
     };
 
@@ -97,14 +97,14 @@ const SupplierOrders: React.FC = () => {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 if (error.response?.status === 401) {
-                    setError('נדרשת התחברות מחדש');
+                    setError('Authentication required');
                 } else if (error.response?.status === 404) {
-                    setError('לא נמצאו הזמנות');
+                    setError('No orders found');
                 } else {
-                    setError('שגיאה בטעינת ההזמנות');
+                    setError('Error loading orders');
                 }
             } else {
-                setError('שגיאה בטעינת ההזמנות');
+                setError('Error loading orders');
             }
             setLoading(false);
         }
@@ -115,18 +115,17 @@ const SupplierOrders: React.FC = () => {
         dispatch(fetchOrderItems());
     }, [dispatch]);
 
-    if (loading) return <div>טוען הזמנות...</div>;
+    if (loading) return <div>Loading orders...</div>;
     if (error) return <div className="error">{error}</div>;
 
     return (
         <div className="supplier-orders">
-            <h2>הזמנות</h2>
+            <h2>Orders</h2>
             {orders.length === 0 ? (
-                <p>אין הזמנות להצגה</p>
+                <p>No orders to display</p>
             ) : (
                 <div className="orders-list">
                     {orders.map((order) => {
-                        // Get all items for this order from both sources
                         const orderItemsFromStore = allOrderItems.filter(item => item.orderId === order.orderId);
                         const allItems = [...(order.orderItems || []), ...orderItemsFromStore];
                         const totalAmount = allItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -134,51 +133,51 @@ const SupplierOrders: React.FC = () => {
                         return (
                             <div key={order.orderId} className="order-card">
                                 <div className="order-header">
-                                    <h3>הזמנה #{order.orderId}</h3>
+                                    <h3>Order #{order.orderId}</h3>
                                     <span className="order-date">
-                                        {new Date(order.createdAt).toLocaleDateString('he-IL')}
+                                        {new Date(order.createdAt).toLocaleDateString('en-US')}
                                     </span>
                                 </div>
                                 <div className="order-status">
                                     {order.status === OrderStatus.COMPLETED ? (
                                         <div className="completed-status">
-                                            <span>ההזמנה התקבלה אצל בעל החנות</span>
+                                            <span>Order received by store owner</span>
                                         </div>
                                     ) : (
                                         <>
-                                            <span>סטטוס: {order.status}</span>
+                                            <span>Status: {order.status}</span>
                                             {order.status !== OrderStatus.PROCESSING && (
                                                 <button 
                                                     className="update-status-button"
                                                     onClick={() => updateOrderStatus(order.orderId)}
                                                 >
-                                                    התחל לעבד הזמנה
+                                                    Start Processing Order
                                                 </button>
                                             )}
                                         </>
                                     )}
                                 </div>
                                 <div className="order-items">
-                                    <h4>פריטים בהזמנה:</h4>
+                                    <h4>Order Items:</h4>
                                     <div className="items-list">
                                         {allItems.length > 0 ? (
                                             allItems.map((item, index) => (
                                                 <div key={`item-${index}-${order.orderId}`} className="item-card">
                                                     <div className="order-item-details">
-                                                        <p><strong>שם המוצר:</strong> {item.productName}</p>
-                                                        <p><strong>כמות:</strong> {item.quantity}</p>
-                                                        <p><strong>מחיר ליחידה:</strong> ₪{item.price}</p>
-                                                        <p><strong>סה"כ לפריט:</strong> ₪{(item.price * item.quantity).toFixed(2)}</p>
+                                                        <p><strong>Product Name:</strong> {item.productName}</p>
+                                                        <p><strong>Quantity:</strong> {item.quantity}</p>
+                                                        <p><strong>Unit Price:</strong> ₪{item.price}</p>
+                                                        <p><strong>Total for Item:</strong> ₪{(item.price * item.quantity).toFixed(2)}</p>
                                                     </div>
                                                 </div>
                                             ))
                                         ) : (
-                                            <p className="no-items">אין פריטים בהזמנה</p>
+                                            <p className="no-items">No items in order</p>
                                         )}
                                     </div>
                                 </div>
                                 <div className="order-total">
-                                    סה"כ: ₪{totalAmount.toFixed(2)}
+                                    Total: ₪{totalAmount.toFixed(2)}
                                 </div>
                             </div>
                         );

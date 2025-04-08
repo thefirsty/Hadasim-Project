@@ -60,7 +60,7 @@ const ProductForm: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!supplierId) {
-            alert('לא ניתן להוסיף מוצר ללא זיהוי ספק');
+            alert('Cannot add product without supplier identification');
             return;
         }
 
@@ -94,9 +94,9 @@ const ProductForm: React.FC = () => {
 
     return (
         <form onSubmit={handleSubmit} className="product-form">
-            <h2>הוספת מוצר חדש</h2>
+            <h2>Add New Product</h2>
             <div className="form-group">
-                <label htmlFor="productName">שם המוצר:</label>
+                <label htmlFor="productName">Product Name:</label>
                 <input
                     type="text"
                     id="productName"
@@ -107,7 +107,7 @@ const ProductForm: React.FC = () => {
                 />
             </div>
             <div className="form-group">
-                <label htmlFor="unitPrice">מחיר:</label>
+                <label htmlFor="unitPrice">Price:</label>
                 <input
                     type="number"
                     id="unitPrice"
@@ -120,7 +120,7 @@ const ProductForm: React.FC = () => {
                 />
             </div>
             <div className="form-group">
-                <label htmlFor="minOrderQuantity">כמות מינימלית להזמנה:</label>
+                <label htmlFor="minOrderQuantity">Minimum Order Quantity:</label>
                 <input
                     type="number"
                     id="minOrderQuantity"
@@ -132,7 +132,7 @@ const ProductForm: React.FC = () => {
                     step="1"
                 />
             </div>
-            <button type="submit">הוסף מוצר</button>
+            <button type="submit">Add Product</button>
         </form>
     );
 };
