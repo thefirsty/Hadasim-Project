@@ -37,7 +37,6 @@ const Login: React.FC = () => {
                 role: localStorage.getItem('role')
             });
             
-            // Redirect based on user role using direct navigation
             const userRole = response.role?.toUpperCase();
             console.log('User role for navigation:', userRole);
             

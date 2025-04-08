@@ -54,66 +54,75 @@ const Register: React.FC = () => {
 
     return (
         <div className="register-container">
-            <h2>Register</h2>
+            <h2>Register as Supplier</h2>
             {error && <div className="error-message">{error}</div>}
             {success && <div className="success-message">{success}</div>}
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                    <label>Email:</label>
+                    <label>Email</label>
                     <input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
+                        placeholder="Enter your email"
                     />
                 </div>
                 <div className="form-group">
-                    <label>Password:</label>
+                    <label>Password</label>
                     <input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                        placeholder="Enter your password"
                     />
                 </div>
                 <div className="form-group">
-                    <label>Confirm Password:</label>
+                    <label>Confirm Password</label>
                     <input
                         type="password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         required
+                        placeholder="Confirm your password"
                     />
                 </div>
                 <div className="form-group">
-                    <label>Contact Name:</label>
+                    <label>Contact Name</label>
                     <input
                         type="text"
                         value={contactName}
                         onChange={(e) => setContactName(e.target.value)}
                         required
+                        placeholder="Enter contact name"
                     />
                 </div>
                 <div className="form-group">
-                    <label>Company Name:</label>
+                    <label>Company Name</label>
                     <input
                         type="text"
                         value={companyName}
                         onChange={(e) => setCompanyName(e.target.value)}
                         required
+                        placeholder="Enter company name"
                     />
                 </div>
                 <div className="form-group">
-                    <label>Phone:</label>
+                    <label>Phone</label>
                     <input
                         type="tel"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         required
+                        placeholder="Enter phone number"
                     />
                 </div>
                 <button type="submit">Register</button>
             </form>
+            <p className="auth-link">
+                Already have an account? <a href="/login">Login here</a>
+            </p>
         </div>
     );
 };

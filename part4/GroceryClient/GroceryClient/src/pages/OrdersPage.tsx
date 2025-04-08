@@ -135,13 +135,11 @@ const OrdersPage: React.FC = () => {
                 throw new Error('No authentication token found');
             }
 
-            // בדיקה שיש פריטים בהזמנה
             if (!newOrder.items || newOrder.items.length === 0) {
                 setError('Cannot create an empty order');
                 return;
             }
 
-            // הכנת אובייקט ההזמנה בפורמט הנכון
             const orderData = {
                 orderId: 0,
                 supplierId: currentSupplierId,
@@ -166,7 +164,7 @@ const OrdersPage: React.FC = () => {
 
             console.log('Order created:', orderResponse.data);
 
-            // איפוס הטופס ורענון הרשימה
+            // איפוס הטופס
             setShowNewOrderForm(false);
             setNewOrder({
                 items: [],
@@ -175,7 +173,14 @@ const OrdersPage: React.FC = () => {
                 userId: 0
             });
             setCurrentSupplierId(null);
-            fetchOrders();
+
+            // רענון כל הנתונים בדף
+            await Promise.all([
+                fetchOrders(),
+                fetchProducts(),
+                dispatch(fetchOrderItems())
+            ]);
+
         } catch (err) {
             console.error('Error creating order:', err);
             setError('Error creating order');

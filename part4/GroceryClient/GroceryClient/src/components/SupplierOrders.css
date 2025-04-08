@@ -1,132 +1,168 @@
 .supplier-orders {
     direction: rtl;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 2rem;
+    background-color: #f8f9fa;
 }
 
 .supplier-orders h2 {
     text-align: center;
-    color: #333;
-    margin-bottom: 30px;
+    color: #2c3e50;
+    margin-bottom: 2rem;
+    font-size: 2.2rem;
+    font-weight: 600;
 }
 
 .orders-list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    padding: 1rem;
 }
 
 .order-card {
     background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.order-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .order-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e9ecef;
 }
 
 .order-header h3 {
     margin: 0;
-    color: #333;
+    color: #2c3e50;
+    font-size: 1.4rem;
+    font-weight: 600;
 }
 
 .order-date {
-    color: #666;
+    color: #6c757d;
+    font-size: 1rem;
 }
 
 .order-status {
-    margin-bottom: 15px;
-    padding: 8px 12px;
-    background-color: #f5f5f5;
-    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .completed-status {
-    color: #4CAF50;
-    font-weight: bold;
+    color: #2ecc71;
+    font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
+    font-size: 1.1rem;
 }
 
 .completed-status::before {
     content: "✓";
-    color: #4CAF50;
-    font-size: 1.2em;
+    color: #2ecc71;
+    font-size: 1.4em;
 }
 
 .update-status-button {
-    background-color: #4CAF50;
+    background-color: #3498db;
     color: white;
     border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
 .update-status-button:hover {
-    background-color: #45a049;
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.update-status-button:active {
+    transform: translateY(0);
 }
 
 .order-items {
-    margin-bottom: 15px;
+    margin-bottom: 1.5rem;
 }
 
 .order-items h4 {
-    margin-bottom: 10px;
-    color: #333;
+    margin-bottom: 1rem;
+    color: #2c3e50;
+    font-size: 1.2rem;
+    font-weight: 600;
 }
 
 .items-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
-    margin-bottom: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .item-card {
-    background-color: #f9f9f9;
-    padding: 15px;
-    border-radius: 6px;
-    border: 1px solid #eee;
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    transition: transform 0.2s ease;
+}
+
+.item-card:hover {
+    transform: translateY(-2px);
 }
 
 .item-card p {
-    margin: 5px 0;
+    margin: 0.5rem 0;
+    color: #495057;
 }
 
 .item-card strong {
-    color: #333;
-    margin-left: 5px;
+    color: #2c3e50;
+    margin-left: 0.5rem;
+    font-weight: 600;
 }
 
 .order-total {
     text-align: left;
-    font-size: 1.1em;
-    font-weight: bold;
-    color: #1a237e;
-    padding-top: 15px;
-    border-top: 1px solid #eee;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #3498db;
+    padding-top: 1rem;
+    border-top: 2px solid #e9ecef;
 }
 
 .error {
-    color: #d32f2f;
+    color: #e74c3c;
     text-align: center;
-    padding: 20px;
-    background-color: #ffebee;
-    border-radius: 8px;
-    margin: 20px 0;
+    padding: 1.5rem;
+    background-color: #fff3f3;
+    border-radius: 12px;
+    margin: 2rem 0;
+    font-weight: 500;
+}
+
+@media (max-width: 1024px) {
+    .orders-list {
+        grid-template-columns: 1fr;
+    }
 } 

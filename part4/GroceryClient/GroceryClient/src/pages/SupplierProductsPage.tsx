@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProductForm from '../components/ProductForm';
-import ProductList from '../components/ProductList';
 import './SupplierProductsPage.css';
 
 const SupplierProductsPage: React.FC = () => {
@@ -19,7 +18,6 @@ const SupplierProductsPage: React.FC = () => {
             <main className="supplier-products-content">
                 <div className="products-section">
                     <ProductForm />
-                    <ProductList />
                 </div>
             </main>
         </div>

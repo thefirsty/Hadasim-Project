@@ -4,4 +4,6 @@ export interface Product {
     unitPrice: number;
     minOrderQuantity: number;
     supplierId: number;
+    description?: string;
+    image?: string;
 } 
