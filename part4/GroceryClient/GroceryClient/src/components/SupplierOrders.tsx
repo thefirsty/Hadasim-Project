@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import { OrderStatus } from '../types/order';
 import './SupplierOrders.css';
 
 interface Order {
     orderId: number;
     createdAt: string;
-    status: string;
+    status: OrderStatus;
     totalAmount: number;
     orderItems?: OrderItem[];
 }
@@ -27,54 +28,82 @@ const SupplierOrders: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchOrders = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    throw new Error('No token found');
+    const updateOrderStatus = async (orderId: number) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+
+            const formData = new FormData();
+            formData.append('OrderId', orderId.toString());
+            formData.append('Status', OrderStatus.PROCESSING);
+            formData.append('CreatedDate', new Date().toISOString());
+            formData.append('Products', JSON.stringify([]));
+
+            await axios.put(`https://localhost:7012/api/Order/${orderId}`, formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
                 }
+            });
 
-                // Decode token to get user ID
-                const decoded = jwtDecode<TokenPayload>(token);
-                const userId = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+            // Refresh orders after update
+            fetchOrders();
+        } catch (error) {
+            console.error('Error updating order status:', error);
+            setError('שגיאה בעדכון סטטוס ההזמנה');
+        }
+    };
 
-                // Get supplier ID using user ID
-                const supplierResponse = await axios.get(`https://localhost:7012/api/Supplier/user/${userId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
+    const fetchOrders = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
 
-                const supplierId = supplierResponse.data.supplierId;
+            // Decode token to get user ID
+            const decoded = jwtDecode<TokenPayload>(token);
+            const userId = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
 
-                // Get orders for the supplier
-                const ordersResponse = await axios.get(`https://localhost:7012/api/Order/by-supplier/${supplierId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'accept': 'text/plain'
-                    }
-                });
-                
-                console.log('Orders response:', ordersResponse.data);
-                setOrders(ordersResponse.data);
-                setLoading(false);
-            } catch (error) {
-                if (axios.isAxiosError(error)) {
-                    if (error.response?.status === 401) {
-                        setError('נדרשת התחברות מחדש');
-                    } else if (error.response?.status === 404) {
-                        setError('לא נמצאו הזמנות');
-                    } else {
-                        setError('שגיאה בטעינת ההזמנות');
-                    }
+            // Get supplier ID using user ID
+            const supplierResponse = await axios.get(`https://localhost:7012/api/Supplier/user/${userId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            const supplierId = supplierResponse.data.supplierId;
+
+            // Get orders for the supplier
+            const ordersResponse = await axios.get(`https://localhost:7012/api/Order/by-supplier/${supplierId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'accept': 'text/plain'
+                }
+            });
+            
+            console.log('Orders response:', ordersResponse.data);
+            setOrders(ordersResponse.data);
+            setLoading(false);
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status === 401) {
+                    setError('נדרשת התחברות מחדש');
+                } else if (error.response?.status === 404) {
+                    setError('לא נמצאו הזמנות');
                 } else {
                     setError('שגיאה בטעינת ההזמנות');
                 }
-                setLoading(false);
+            } else {
+                setError('שגיאה בטעינת ההזמנות');
             }
-        };
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchOrders();
     }, []);
 
@@ -97,7 +126,23 @@ const SupplierOrders: React.FC = () => {
                                 </span>
                             </div>
                             <div className="order-status">
-                                סטטוס: {order.status}
+                                {order.status === OrderStatus.COMPLETED ? (
+                                    <div className="completed-status">
+                                        <span>ההזמנה התקבלה אצל בעל החנות</span>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <span>סטטוס: {order.status}</span>
+                                        {order.status !== OrderStatus.PROCESSING && (
+                                            <button 
+                                                className="update-status-button"
+                                                onClick={() => updateOrderStatus(order.orderId)}
+                                            >
+                                                התחל לעבד הזמנה
+                                            </button>
+                                        )}
+                                    </>
+                                )}
                             </div>
                             {order.orderItems && order.orderItems.length > 0 && (
                                 <div className="order-items">

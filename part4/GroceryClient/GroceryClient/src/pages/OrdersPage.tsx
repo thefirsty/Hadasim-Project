@@ -131,7 +131,7 @@ const OrdersPage: React.FC = () => {
             const orderData = {
                 orderId: 0,
                 supplierId: firstProduct.supplierId,
-                status: "start",
+                status: OrderStatus.PENDING,
                 createdDate: new Date().toISOString(),
                 products: newOrder.items.map(item => ({
                     orderItemId: 0,
@@ -176,7 +176,7 @@ const OrdersPage: React.FC = () => {
 
             const formData = new FormData();
             formData.append('OrderId', orderId.toString());
-            formData.append('Status', 'COMPLETED');
+            formData.append('Status', OrderStatus.COMPLETED);
             formData.append('CreatedDate', new Date().toISOString());
             formData.append('Products', JSON.stringify([]));
 
